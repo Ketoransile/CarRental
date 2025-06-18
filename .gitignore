@@ -1,0 +1,40 @@
+# === Node Modules ===
+**/node_modules/
+
+# === Build Outputs ===
+**/dist/
+**/build/
+**/.next/
+**/.out/
+
+# === Environment Variables ===
+**/.env
+**/.env.local
+**/.env.*.local
+
+# === Logs ===
+**/logs/
+**/*.log
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Editor Configs ===
+.vscode/
+.idea/
+*.swp
+
+# === Coverage ===
+**/coverage/
+
+# === Temp or Uploaded Files ===
+**/tmp/
+**/uploads/
+
+# === Firebase (optional) ===
+**/.firebase/
+
+# === Lock Files (optional, if you want to ignore them globally) ===
+# **/package-lock.json
+# **/yarn.lock
