@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 export const Footer = () => {
   return (
-    <div className="w-full flex flex-col gap-10 items-start py-10 px-4 md:px-6 lg:px-10  xl:px-20">
+    <div className="w-full flex flex-col gap-10 items-start py-10 px-4 md:px-6 lg:px-10  xl:px-20 pt-32">
       <div className="w-full flex items-start justify-between  border-b-2 border-neutral-300 pb-10">
         <p className="text-2xl max-w-lg font-bold text-black">
           Whether it's a weekend getaway or a business trip, we’ve got the
@@ -31,7 +31,9 @@ export const Footer = () => {
           <h1 className="font-bold">Newsletter</h1>
           <div className="flex items-center gap-2">
             <Input placeholder="Enter Your Email" />
-            <Button className="bg-blue-600 px-4 rounded-xl">Send</Button>
+            <Button className="bg-blue-600 px-4 rounded-xl text-white ">
+              Send
+            </Button>
           </div>
         </div>
       </div>

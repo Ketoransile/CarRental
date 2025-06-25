@@ -1,4 +1,4 @@
-import type { ICar } from "../types/type";
+import type { ICar } from "../types/car";
 import { cars } from "../utils/dummyCarDetails";
 import { CarCard } from "./CarCard";
 

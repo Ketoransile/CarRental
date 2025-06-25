@@ -13,20 +13,20 @@ export const Header = () => {
       href: "/",
     },
     {
+      title: "Vehicles",
+      href: "/all-cars",
+    },
+    {
       title: "About us",
       href: "/about",
     },
     {
-      title: "Service",
-      href: "/services",
-    },
-    {
-      title: "Pricing",
-      href: "/pricing",
+      title: "Contact US",
+      href: "/contactUs",
     },
   ];
   return (
-    <div className="w-full sticky top-0 bg-white z-20  py-4 px-4 md:px-6 lg:px-10  xl:px-20 flex items-center justify-between text-base">
+    <div className="w-full sticky top-0 bg-white z-20  py-2 px-4 md:px-6 lg:px-10  xl:px-20 flex items-center justify-between text-base border-b border-neutral-200">
       <div className="flex items-center gap-4 max-w-[50%] w-full">
         <Link
           to="/"
@@ -54,9 +54,11 @@ export const Header = () => {
             </NavLink>
           ))}
         </nav>
-        <Button color="primary" className="rounded-lg">
-          Get Started
-        </Button>
+        <Link to="/login">
+          <Button className="bg-blue-600 text-white rounded-lg">
+            Get Started
+          </Button>
+        </Link>
       </div>
     </div>
   );

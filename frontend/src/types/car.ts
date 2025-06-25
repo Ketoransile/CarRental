@@ -14,4 +14,5 @@ export interface ICar {
   ac: boolean;
   image: string; // This will hold the imported image path/URL
   features: string[];
+  description: string;
 }
