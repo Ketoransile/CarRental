@@ -13,6 +13,7 @@ import { CarDetailPage } from "./pages/CarDetail/CarDetailPage.tsx";
 import { ContactUsPage } from "./pages/Contact/ContactUsPage.tsx";
 import { CarBookingPage } from "./pages/CarBookingPage/CarBookingPage.tsx";
 import { BookingPageLoader } from "./loaders/CarBookingPageLoader.ts";
+import { SuccessPage } from "./pages/SuccessPage/SuccessPage.tsx";
 // import { ContactUsPage } from "./pages/Contact/Contact.tsx";
 
 const router = createBrowserRouter([
@@ -41,6 +42,11 @@ const router = createBrowserRouter([
         path: "/rent/:id",
         element: <CarBookingPage />,
         loader: BookingPageLoader,
+      },
+      {
+        path: "/success/:id",
+        element: <SuccessPage />,
+        errorElement: <NotFound />,
       },
     ],
   },
