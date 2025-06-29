@@ -1,12 +1,13 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { client } from "@/db"; // your mongodb client
-import "dotenv/config";
+import { client } from "../config/db";
+
 export const auth = betterAuth({
-  database: mongodbAdapter(client), //...other options
+  database: mongodbAdapter(client.db()),
   emailAndPassword: {
     enabled: true,
   },
+  trustedOrigins: ["http://localhost:3000"],
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
