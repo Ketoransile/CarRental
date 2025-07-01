@@ -31,11 +31,11 @@ export const RecommendedCars = () => {
         ))}
       </div>
 
-      <Button className="px-32 mt-10 bg-blue-600  self-center">
-        <Link to="/all-cars" className="text-white">
+      <Link to="/all-cars" className="text-white self-center">
+        <Button className="px-32 mt-10 bg-blue-600  text-white ">
           Show More Cars
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 };

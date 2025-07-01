@@ -80,8 +80,9 @@ export const FilterPanel = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-6 text-sm">
+    <div className="flex flex-col gap-4 text-sm">
       {/* ✅ Make Filter */}
+      <h1 className="text-black font-bold text-center -py-2">Filter By</h1>
       <CheckboxGroup
         label="Make"
         defaultValue={selectedMakes}

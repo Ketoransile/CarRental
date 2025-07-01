@@ -4,7 +4,8 @@ if (!URI) {
   throw new Error("MONGO_URL environment variable is not defined");
 }
 console.log("URI from db.ts is", URI);
-export const client = new MongoClient(URI, { tls: true });
+// export const client = new MongoClient(URI, { tls: true });
+export const client = new MongoClient(URI);
 export async function connectDB() {
   try {
     await client.connect();

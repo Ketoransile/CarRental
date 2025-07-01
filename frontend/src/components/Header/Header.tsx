@@ -83,15 +83,10 @@ import { UserMenu } from "../UserMenu";
 
 export const Header = () => {
   const location = useLocation();
-  // Select state from your Zustand store
+
   const { user, isLoading, fetchSession, logout } = useAuthStore();
 
-  // The initial session fetch is now handled by the store itself (see useAuthStore.getState().fetchSession() above)
-  // You might want to re-fetch if the location changes or if you have other triggers,
-  // but for a typical app load, the initial call in the store is sufficient.
-  // If you need to re-fetch on specific events (e.g., after login/logout from another component),
-  // you would call fetchSession() explicitly.
-  // For the header, you likely just need to *read* the current state.
+  console.log("user from header is ", user);
 
   const isActiveLink = (link: string) => {
     return location.pathname === link;
@@ -117,13 +112,13 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-10">
-        <nav className="flex items-center gap-10">
+        <nav className="flex items-center gap-4">
           {navLinks.map((navLink) => (
             <NavLink
               to={navLink.href}
               key={navLink.title}
               className={`${
-                isActiveLink(navLink.href) ? "text-blue-600 font-bold" : ""
+                isActiveLink(navLink.href) ? "text-blue-600 font-bold " : ""
               }`}
             >
               {navLink.title}
@@ -131,20 +126,12 @@ export const Header = () => {
           ))}
         </nav>
 
-        {isLoading ? (
+        {/* {isLoading && (
           <div>Loading...</div> // Or a spinner
-        ) : user ? (
-          // <div className="flex items-center gap-4">
-          //   <span className="font-semibold">
-          //     Welcome, {user.name || user.email}!
-          //   </span>
-          //   <Button color="danger" onClick={logout}>
-          //     Logout
-          //   </Button>
-          // </div>
+        )} */}
+        {user ? (
           <UserMenu />
         ) : (
-          // User is not logged in, show Get Started button
           <Link to="/login">
             <div className="bg-blue-600 text-white rounded-lg px-4 py-2 font-semibold">
               Get Started

@@ -103,14 +103,26 @@ export const LoginForm: React.FC = () => {
         )}
       />
 
-      <Button
-        color="primary"
-        type="submit"
-        className="w-full disabled:bg-blue-300"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Submitting" : "Login"}
-      </Button>
+      {/* {isSubmitting ? "Logging You in..." : "Login"} */}
+
+      {isSubmitting ? (
+        <Button
+          isLoading
+          color="primary"
+          className="w-full disabled:bg-blue-400"
+        >
+          Logging You in..
+        </Button>
+      ) : (
+        <Button
+          color="primary"
+          type="submit"
+          className="w-full disabled:bg-blue-300"
+          disabled={isSubmitting}
+        >
+          Login
+        </Button>
+      )}
     </Form>
   );
 };
