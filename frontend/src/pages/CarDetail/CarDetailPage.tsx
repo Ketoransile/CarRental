@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { cars } from "../../utils/dummyCarDetails";
 import type { ICar } from "../../types/car";
 import { Button, Image } from "@heroui/react";
 import { Link, useNavigate } from "react-router";
@@ -29,11 +28,23 @@ import { FaTags } from "react-icons/fa"; // Price
 
 // Check circle for availability
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa"; // Available / Not Available
+import { useEffect } from "react";
+import { useCarStore } from "../../stores/useCarStore";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const CarDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const car: ICar | undefined = cars.find((car: ICar) => car.id === Number(id));
+  const { cars, loading, error, fetchCars } = useCarStore();
+  useEffect(() => {
+    fetchCars();
+  }, [fetchCars]);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p>Error: {error}</p>;
+
+  // console.log("id from car detail page is ", id);
+  const car: ICar | undefined = cars.find((car: ICar) => car._id === id);
 
   // Handle case where car is not found (e.g., invalid ID in URL)
   if (!car) {
@@ -135,7 +146,7 @@ export const CarDetailPage = () => {
           disabled={!car.available}
           onClick={() => {
             if (car.available) {
-              navigate(`/rent/${car.id}`);
+              navigate(`/rent/${car._id}`);
             }
           }}
         >

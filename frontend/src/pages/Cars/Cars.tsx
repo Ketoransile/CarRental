@@ -4,8 +4,18 @@ import { CarsList } from "../../components/CarsList";
 import type { ICar } from "../../types/car";
 import { cars } from "../../utils/dummyCarDetails";
 import { Tabs, Tab } from "@heroui/tabs";
+import { useEffect } from "react";
+import { useCarStore, type FCar } from "../../stores/useCarStore";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 export const CarsPage = () => {
   const [searchParams] = useSearchParams();
+  const { cars, loading, error, fetchCars } = useCarStore();
+  useEffect(() => {
+    fetchCars();
+  }, [fetchCars]);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p>Error: {error}</p>;
 
   const selectedMakes = searchParams.get("make")?.split(",") || [];
   const selectedTypes = searchParams.get("type")?.split(",") || [];
@@ -13,7 +23,7 @@ export const CarsPage = () => {
     searchParams.get("transmission")?.split(",") || [];
   const selectedFuelTypes = searchParams.get("fuelType")?.split(",") || [];
 
-  const filterCars = (carsToFilter: ICar[]) => {
+  const filterCars = (carsToFilter: FCar[]) => {
     return carsToFilter.filter((car) => {
       // Check if the car's make is in the selected makes list, or if no makes are selected
       const isMakeMatch =
@@ -31,7 +41,8 @@ export const CarsPage = () => {
       // Check if the car's fuel type is in the selected fuel types list, or if no fuel types are selected
       const isFuelTypeMatch =
         selectedFuelTypes.length === 0 ||
-        selectedFuelTypes.includes(car.fuelType);
+        (car.fuelType !== undefined &&
+          selectedFuelTypes.includes(car.fuelType));
 
       // A car matches if it satisfies all active filter criteria
       return (

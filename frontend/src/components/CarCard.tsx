@@ -5,7 +5,8 @@ import { FaUserFriends } from "react-icons/fa"; // Seat: Group of users
 import { LuGauge } from "react-icons/lu"; // Mileage: Gauge for distance or speed
 import { FaGasPump } from "react-icons/fa";
 import { GiGearStickPattern } from "react-icons/gi";
-export const CarCard = ({ car }: { car: ICar }) => {
+import type { FCar } from "../stores/useCarStore";
+export const CarCard = ({ car }: { car: FCar }) => {
   return (
     <div className="relative group flex flex-col gap-2  rounded-xl py-4 transition-shadow ">
       {car.available && (
@@ -58,7 +59,7 @@ export const CarCard = ({ car }: { car: ICar }) => {
             {car.fuelType}
           </div>
         </div>
-        <Link to={`/all-cars/${car.id}`} className="w-full ">
+        <Link to={`/all-cars/${car._id}`} className="w-full ">
           <Button className="w-full bg-blue-600 text-white">
             View Details
           </Button>

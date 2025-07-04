@@ -17,6 +17,8 @@ import { SuccessPage } from "./pages/SuccessPage/SuccessPage.tsx";
 import { Login } from "./pages/Login/Login.tsx";
 import { Register } from "./pages/Register/Register.tsx";
 import ProtectedRoutes from "./utils/ProtectedRoutes.tsx";
+import { UserBookingsLoader } from "./loaders/UserBokingsLoader.ts";
+import { MyBookings } from "./pages/MyBookings/MyBookings.tsx";
 // import { ContactUsPage } from "./pages/Contact/Contact.tsx";
 
 const router = createBrowserRouter([
@@ -54,12 +56,17 @@ const router = createBrowserRouter([
           {
             path: "/rent/:id",
             element: <CarBookingPage />,
-            loader: BookingPageLoader,
           },
           {
             path: "/success/:id",
             element: <SuccessPage />,
             errorElement: <NotFound />,
+          },
+          {
+            path: "/my-bookings/:userId",
+            element: <MyBookings />,
+            errorElement: <NotFound />,
+            loader: UserBookingsLoader,
           },
         ],
       },

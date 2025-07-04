@@ -13,7 +13,7 @@ import { LuUser } from "react-icons/lu";
 export const UserMenu = () => {
   const { user, isLoading, logout } = useAuthStore();
   const navigate = useNavigate();
-
+  const userId = user?.id;
   if (isLoading || !user) {
     return null;
   }
@@ -52,8 +52,9 @@ export const UserMenu = () => {
       </DropdownTrigger>
       <DropdownMenu aria-label="User Menu" onAction={handleAction}>
         <DropdownItem key="home">Home</DropdownItem>
-        <DropdownItem key="about">About</DropdownItem>{" "}
+        <DropdownItem key="about">About</DropdownItem>
         <DropdownItem key="profile">Profile</DropdownItem>
+        <DropdownItem key={`my-bookings/${userId}`}>My Bookings</DropdownItem>
         <DropdownItem key="settings">Settings</DropdownItem>
         <DropdownItem key="logout" className="text-red-500">
           Logout

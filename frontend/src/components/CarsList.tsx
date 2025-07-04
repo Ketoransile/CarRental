@@ -1,8 +1,9 @@
+import type { FCar } from "../stores/useCarStore";
 import type { ICar } from "../types/car";
 import { CarCard } from "./CarCard";
 
 interface CarListProps {
-  cars: ICar[];
+  cars: FCar[];
 }
 export const CarsList = ({ cars }: CarListProps) => {
   console.log("cars array is ", cars);
@@ -11,8 +12,8 @@ export const CarsList = ({ cars }: CarListProps) => {
       {cars.length > 0 ? (
         <div className="min-h-screen bg-neutral-100 px-4 rounded-xl">
           <div className="w-full grid grid-cols-3 gap-x-10 gap-y-10 items-center justify-between p-4">
-            {cars.map((car: ICar) => (
-              <CarCard car={car} key={car.id} />
+            {cars.map((car: FCar) => (
+              <CarCard car={car} key={car._id} />
             ))}
           </div>
         </div>

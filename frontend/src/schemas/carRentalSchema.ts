@@ -1,8 +1,8 @@
 import { z } from "zod";
-
+const objectIdRegex = /^[a-f\d]{24}$/i;
 export const CarRentalSchema = z
   .object({
-    name: z.string().min(1, { message: "Name is required" }),
+    fullName: z.string().min(1, { message: "Full Name is required" }),
     phoneNumber: z
       .string()
       .min(10, { message: "Phone number must be at least 10 digits" })
@@ -39,48 +39,17 @@ export const CarRentalSchema = z
       .min(1, { message: "Drop-off location is required" }),
     // Remove the cross-field validation from here, it will be moved to superRefine
     dropOffDate: z.string().min(1, { message: "Drop-off date is required" }),
-
-    firstName: z.string().min(1, { message: "First name is required" }),
-    lastName: z.string().min(1, { message: "Last name is required" }),
-    cardNumber: z
+    vehicleId: z
       .string()
-      .min(16, { message: "Card Number must be 16 digits" })
-      .max(16, { message: "Card Number must be 16 digits" })
-      .regex(/^[0-9]{16}$/, {
-        message: "Invalid card number format. Must be 16 digits.",
-      }),
-    expiryDate: z
-      .string()
-      .min(1, { message: "Expiry date is required." })
-      .regex(/^\d{2}\/\d{2}$/, { message: "Format must be MM/YY." })
-      .refine(
-        (val) => {
-          const [month, year] = val.split("/").map(Number);
-          if (isNaN(month)) return false;
-          if (isNaN(year)) return false;
+      .min(1, { message: "vehicleId is required" })
+      .regex(objectIdRegex, { message: "Invalid MongoDB ObjectId format" }),
+    totalPrice: z
+      .number({ required_error: "Total price is required" })
+      .min(0.01, "Total price must be greater than 0"),
 
-          // Convert 2-digit year to full year (e.g., "25" -> 2025)
-          const fullYear = 2000 + year;
-          const currentDate = new Date();
-          const currentYear = currentDate.getFullYear();
-          const currentMonth = currentDate.getMonth() + 1;
-
-          return (
-            fullYear > currentYear ||
-            (fullYear === currentYear && month >= currentMonth)
-          );
-        },
-        { message: "Expiry date must be in the future." }
-      ),
-    cvc: z
-      .string()
-      .min(3, { message: "CVC is required and must be 3 or 4 digits." })
-      .max(4, { message: "CVC must be 3 or 4 digits." })
-      .regex(/^[0-9]{3,4}$/, { message: "Invalid CVC format." }),
-
-    // Confirmation Checkboxes
     confirmationTerms: z
       .array(z.string())
+      .transform((arr) => arr.map((s) => s.trim().toLowerCase()))
       .refine((val) => val.includes("terms") && val.includes("news"), {
         message: "You must agree with our terms, conditions and policies.",
       }),

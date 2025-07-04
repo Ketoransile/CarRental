@@ -7,19 +7,16 @@ export const BookingPageLoader = async ({
 }: LoaderFunctionArgs): Promise<ICar> => {
   const carId = params.id;
   console.log("id params from loader is ", carId);
-  if (!carId || isNaN(Number(carId))) {
+  if (!carId) {
     throw new Response("Invalid car ID provided.", {
       status: 400,
       statusText: "Bad Request",
     });
   }
 
-  const car: ICar | undefined = cars.find(
-    (car: ICar) => car.id === Number(carId)
-  );
+  const car: ICar | undefined = cars.find((car: ICar) => car._id === carId);
 
   if (!car) {
-    // If car not found, return a 404 response
     throw new Response("Car not found.", {
       status: 404,
       statusText: "Not Found",

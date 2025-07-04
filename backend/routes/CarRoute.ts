@@ -8,12 +8,13 @@ import {
   // editSingleCar,
 } from "../controller/carController";
 import { authenticatedUser } from "../middlewares/authenticatedUser";
+import { isAdmin } from "../middlewares/isAdmin";
 
 const route = Router();
-route.post("/create", createCar);
+route.post("/create", isAdmin, createCar);
 route.get("/getCar/:id", getSingleCar);
-route.get("/getAllCars", authenticatedUser, getAllCars);
-route.delete("/deleteCar/:id", deleteSingleCar);
-route.patch("/editCar/:id", editSingleCar);
+route.get("/getAllCars", getAllCars);
+route.delete("/deleteCar/:id", isAdmin, deleteSingleCar);
+route.patch("/editCar/:id", isAdmin, editSingleCar);
 
 export default route;

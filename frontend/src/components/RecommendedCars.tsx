@@ -9,8 +9,18 @@ import {
   FaAngleRight,
   FaChevronRight,
 } from "react-icons/fa";
+import { useEffect } from "react";
+import { useCarStore, type FCar } from "../stores/useCarStore";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export const RecommendedCars = () => {
+  const { cars, loading, error, fetchCars } = useCarStore();
+  useEffect(() => {
+    fetchCars();
+  }, [fetchCars]);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p>Error: {error}</p>;
   return (
     <div className="w-full flex flex-col gap-x-10 gap-y-4 items-start py-20 ">
       <div className="w-full flex items-center justify-between">
@@ -26,7 +36,7 @@ export const RecommendedCars = () => {
         </Link>
       </div>
       <div className="w-full grid grid-cols-3 gap-x-10 gap-y-10 items-center justify-between ">
-        {cars.slice(4, 8).map((car: ICar, index) => (
+        {cars.slice(4, 8).map((car: FCar, index) => (
           <CarCard car={car} key={index} />
         ))}
       </div>

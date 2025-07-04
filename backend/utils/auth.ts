@@ -1,10 +1,12 @@
 import "dotenv/config";
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { client } from "../config/db";
+// import { client } from "../config/db";
 import { admin as adminPlugin } from "better-auth/plugins";
 import { ac, admin, customer } from "../utils/permission";
+import { connectDB } from "../config/db";
 
+const client = await connectDB();
 export const auth = betterAuth({
   database: mongodbAdapter(client.db()),
   user: {

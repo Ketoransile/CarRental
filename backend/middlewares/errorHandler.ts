@@ -1,42 +1,96 @@
-// src/middlewares/errorHandler.js
-import "dotenv/config";
-const errorHandler = (err, req, res, next) => {
-  console.error(err.stack); // Log the full error stack in development
+// import { Request, Response, NextFunction } from "express";
 
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Something went wrong on the server.";
+// export class AppError extends Error {
+//   statusCode: number;
+//   status: string;
 
-  // Mongoose specific errors
-  if (err.name === "CastError" && err.kind === "ObjectId") {
-    const statusCode = 404;
-    const message = `Resource not found with ID of ${err.value}`;
+//   constructor(message: string, statusCode: number) {
+//     super(message);
+//     this.statusCode = statusCode;
+//     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
+//   }
+// }
+
+// export const errorHandler = (
+//   err: Error | AppError,
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): void => {
+//   if (err instanceof AppError) {
+//     res.status(err.statusCode).json({
+//       status: err.status,
+//       message: err.message,
+//     });
+//     return;
+//   }
+
+//   console.error("Error:", err.stack || err);
+//   res.status(500).json({
+//     status: "error",
+//     message:
+//       process.env.NODE_ENV === "development"
+//         ? err.message
+//         : "Internal server error",
+//   });
+//   return;
+// };
+import { Request, Response, NextFunction } from "express";
+
+export class AppError extends Error {
+  statusCode: number;
+  status: string;
+  isOperational: boolean; // Added for distinguishing AppErrors from programming errors
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
+    this.isOperational = true; // Mark AppErrors as operational errors
+
+    // Capture stack trace for better debugging
+    Error.captureStackTrace(this, this.constructor);
   }
-  if (err.code === 11000) {
-    // Duplicate key error
-    const statusCode = 400;
-    const field = Object.keys(err.keyValue)[0];
-    const message = `Duplicate field value: ${field} already exists.`;
+}
+
+export const errorHandler = (
+  err: Error | AppError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  // Default values for unknown errors
+  let statusCode = 500;
+  let status = "error";
+  let message = "Internal server error";
+  let data: any = null; // Optional: for consistent structure, even if null
+
+  if (err instanceof AppError) {
+    // If it's an AppError, use its properties
+    statusCode = err.statusCode;
+    status = err.status;
+    message = err.message;
+    // AppErrors don't typically carry 'data' for errors, but you could add if needed
+    // For consistency, we might send an empty object or null for data in error responses
+  } else {
+    // For programming errors or other unhandled errors
+    console.error("UNHANDLED ERROR 💥:", err); // Log full error for debugging
+
+    // In development, send detailed error info; in production, send generic error
+    if (process.env.NODE_ENV === "development") {
+      message = err.message; // Use the actual error message
+      // Optionally include stack in dev for unhandled errors
+      // data = { stack: err.stack };
+    }
   }
-  if (err.name === "ValidationError") {
-    // Mongoose validation errors
-    const statusCode = 400;
-    const message = Object.values(err.errors)
-      .map((val) => val.message)
-      .join(", ");
-  }
+
+  // Determine 'success' status (false for all errors)
+  const success = false;
 
   res.status(statusCode).json({
-    success: false,
-    message: message,
-    // Only send error details in development mode
-    error:
-      process.env.NODE_ENV === "production"
-        ? {}
-        : {
-            message: err.message,
-            stack: err.stack,
-          },
+    success, // Will be false for all error responses
+    status,
+    message,
+    data, // Will be null unless explicitly set for certain error types
   });
 };
-
-export default errorHandler;

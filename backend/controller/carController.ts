@@ -4,7 +4,7 @@ import { Car } from "../models/car";
 
 export const createCar = async (req: Request, res: Response) => {
   try {
-    await connectDB();
+    // await connectDB();
 
     const carDetailsFromRequest = req.body;
     const {
@@ -62,7 +62,7 @@ export const createCar = async (req: Request, res: Response) => {
 };
 export const getSingleCar = async (req: Request, res: Response) => {
   try {
-    await connectDB();
+    // await connectDB();
 
     const { id } = req.params;
     const car = await Car.findOne({ _id: id });
@@ -151,8 +151,11 @@ export const editSingleCar = async (req: Request, res: Response) => {
 
 export const getAllCars = async (req: Request, res: Response) => {
   try {
-    await connectDB();
+    // await connectDB();
+    // console.log("req.headers from getAllCars is", req.headers);
+    // console.log("💡 Before calling Car.find()");
     const cars = await Car.find();
+    // console.log("💡 After calling Car.find()");
     if (!cars || cars.length === 0) {
       res.status(404).json({
         success: false,
@@ -161,6 +164,7 @@ export const getAllCars = async (req: Request, res: Response) => {
       });
       return;
     }
+    // console.log("Cars from get al lcars is ", cars);
     res.status(200).json({
       success: true,
       message: "Cars were succesfully fetched",
