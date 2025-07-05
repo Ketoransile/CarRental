@@ -25,8 +25,10 @@ import type { DateValue } from "@internationalized/date";
 import type { Granularity } from "@react-types/datepicker";
 import { useNavigate } from "react-router-dom";
 import type { ICar } from "../types/car";
-import { useEffect } from "react";
+import { useEffect, useState } from "react"; // Import useState here
 import axios from "axios";
+import { CalendarDateTime } from "@internationalized/date"; // Ensure CalendarDateTime is imported
+
 interface carRentalProps {
   car: ICar;
   setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
@@ -34,6 +36,13 @@ interface carRentalProps {
   setPickUpDate: React.Dispatch<React.SetStateAction<string>>;
   setDropOffDate: React.Dispatch<React.SetStateAction<string>>;
 }
+
+// Define an interface for the booking date range for type safety and clarity
+interface BookingDateRange {
+  start: Date;
+  end: Date;
+}
+
 export const CarRentalForm = ({
   car,
   setTotalPrice,
@@ -42,7 +51,7 @@ export const CarRentalForm = ({
   setDropOffDate,
 }: carRentalProps) => {
   const navigate = useNavigate();
-  // const totalPrice = 80;
+
   const cities = [
     { key: "nyc", label: "New York City" },
     { key: "la", label: "Los Angeles" },
@@ -55,7 +64,7 @@ export const CarRentalForm = ({
     { key: "tok", label: "Tokyo" },
     { key: "syd", label: "Sydney" },
   ];
-  // const totalPrice = car.pricePerDay*()
+
   const defaultValues: CarRentalFormType = {
     fullName: "",
     phoneNumber: "",
@@ -73,8 +82,9 @@ export const CarRentalForm = ({
   const {
     handleSubmit,
     control,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, isSubmitting },
     watch,
+
     reset,
     setValue,
   } = useForm<CarRentalFormType>({
@@ -82,26 +92,14 @@ export const CarRentalForm = ({
     defaultValues,
   });
 
-  // const parseExpiryDate = (value: string): CalendarDate | null => {
-  //   const [month, year] = value.split("/").map(Number);
-  //   if (!month || !year) return null;
-  //   return new CalendarDate(2000 + year, month, 1);
-  // };
-  // 1. Add watch for dates
   const pickUpDate = watch("pickUpDate");
   const dropOffDate = watch("dropOffDate");
+
   useEffect(() => {
-    // keep the parent component's state in sync
     setPickUpDate(pickUpDate);
     setDropOffDate(dropOffDate);
   }, [pickUpDate, dropOffDate, setPickUpDate, setDropOffDate]);
-  // 2. Calculate total price
-  // let calculatedTotalPrice = 0;
-  // if (pickUpDate && dropOffDate) {
-  //   const start = new Date(pickUpDate);
-  //   const end = new Date(dropOffDate);
-  //   const msPerDay = 1000 * 60 * 60 * 24;
-  // }
+
   useEffect(() => {
     if (pickUpDate && dropOffDate) {
       console.log("pickup date is ", pickUpDate);
@@ -110,72 +108,134 @@ export const CarRentalForm = ({
       const end = new Date(dropOffDate);
       const msPerDay = 1000 * 60 * 60 * 24;
       const diffDays = Math.ceil((end.getTime() - start.getTime()) / msPerDay);
+      // Ensure price is at least 0, even if diffDays is 0 or negative
       const price = diffDays > 0 ? diffDays * car.pricePerDay : 0;
 
-      setTotalPrice(price); // updates parent/UI state
-      setValue("totalPrice", price, {
-        // updates RHF state  🟢
-        shouldValidate: true, // re‑runs Zod immediately
-      });
+      setTotalPrice(price);
+      setValue("totalPrice", price, { shouldValidate: true });
     } else {
       setTotalPrice(0);
       setValue("totalPrice", 0, { shouldValidate: true });
     }
   }, [pickUpDate, dropOffDate, car.pricePerDay, setTotalPrice, setValue]);
-  // useEffect(() => {
-  //   if (pickUpDate && dropOffDate) {
-  //     const start = new Date(pickUpDate);
-  //     const end = new Date(dropOffDate);
 
-  //     // --- CRITICAL ADDITION: Validate Date Objects after creation ---
-  //     // Check if the Date objects are valid (e.g., didn't parse to "Invalid Date")
-  //     // And ensure the drop-off date is strictly after the pick-up date.
-  //     if (
-  //       isNaN(start.getTime()) ||
-  //       isNaN(end.getTime()) ||
-  //       start.getTime() >= end.getTime()
-  //     ) {
-  //       setTotalPrice(0);
-  //       setValue("totalPrice", 0, { shouldValidate: true });
-  //       return; // Exit early if dates are invalid or illogical
-  //     }
-  //     // --- END CRITICAL ADDITION ---
+  // --- NEW STATE FOR BOOKED DATES ---
+  const [bookedDateRanges, setBookedDateRanges] = useState<BookingDateRange[]>(
+    []
+  );
+  // --- NEW LOADING STATE FOR BOOKINGS FETCH ---
+  const [isBookingsLoading, setIsBookingsLoading] = useState(true);
 
-  //     const msPerDay = 1000 * 60 * 60 * 24;
-  //     const diffDays = Math.ceil((end.getTime() - start.getTime()) / msPerDay);
+  // Effect to fetch existing bookings for the car
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      if (!car._id) {
+        setIsBookingsLoading(false); // No car ID means no bookings to fetch
+        return;
+      }
+      setIsBookingsLoading(true); // Start loading
+      try {
+        console.log("Car id is ", car._id);
+        const response = await axios.get(
+          `http://localhost:5000/api/v1/booking/vehicle/${car._id}`, // Make sure this is your correct backend endpoint
+          { withCredentials: true }
+        );
+        console.log("Response", response);
+        // Assuming your backend returns an array of booking objects under `data.data`
+        // Filter for "pending" or "confirmed" statuses as per your booking DB structure
+        const activeBookings = response.data.data.filter(
+          (booking: any) =>
+            booking.status === "pending" || booking.status === "confirmed"
+        );
 
-  //     // No need for diffDays > 0 check here, as we already ensured diffDays will be positive
-  //     const price = diffDays * car.pricePerDay;
+        const ranges = activeBookings.map((booking: any) => ({
+          // Convert ISO strings to Date objects for comparison
+          start: new Date(booking.pickUpDate),
+          end: new Date(booking.dropOffDate),
+        }));
+        setBookedDateRanges(ranges);
+      } catch (error) {
+        console.error("Failed to fetch booked dates:", error);
+        addToast({
+          title: "Error Loading Availability",
+          description: "Could not retrieve car booking information.",
+          color: "danger",
+        });
+      } finally {
+        setIsBookingsLoading(false); // End loading regardless of success or failure
+      }
+    };
 
-  //     setTotalPrice(price); // updates parent/UI state
-  //     setValue("totalPrice", price, {
-  //       shouldValidate: true, // re‑runs Zod immediately
-  //     });
-  //   } else {
-  //     // If either date is missing, reset total price
-  //     setTotalPrice(0);
-  //     setValue("totalPrice", 0, { shouldValidate: true });
-  //   }
-  // }, [pickUpDate, dropOffDate, car.pricePerDay, setTotalPrice, setValue]);
+    fetchBookedDates();
+  }, [car._id]); // Re-run this effect if the car ID changes (e.g., user selects a different car)
 
-  //submit function
-  // const onSubmit = (data: CarRentalFormType) => {
-  //   console.log(
-  //     "Form data submitted is ===================================== ",
-  //     data
-  //   );
-  //   console.log(watch()); // inside component
-  //   reset(defaultValues);
-  //   navigate("/success/1");
-  // };
-  // Assuming you have a way to access your addToast function, e.g., from a custom hook:
-  // import { useToast } from '../context/ToastContext'; // Example import
+  // --- Function to check if a date is booked ---
+  const isDateBooked = (date: DateValue): boolean => {
+    // If 'date' is null or undefined (though DateValue usually isn't), handle it
+    if (!date) {
+      return false; // Or throw an error, depending on desired behavior
+    }
 
+    // Convert DateValue to a standard Date object for comparison.
+    // If it's a CalendarDateTime, use toDate(). Otherwise, toDate("UTC").
+    const checkDate =
+      date instanceof CalendarDateTime
+        ? date.toDate("UTC")
+        : date.toDate("UTC");
+
+    // Get today's date at UTC midnight for comparison to disable past dates
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0); // Set to midnight UTC
+
+    // Disable dates in the past
+    if (checkDate < today) {
+      return true;
+    }
+
+    // Check if the date falls within any fetched booked range
+    for (const range of bookedDateRanges) {
+      // Check if checkDate is on or after the start date AND on or before the end date of a booked range
+      if (checkDate >= range.start && checkDate <= range.end) {
+        return true; // This date is booked/unavailable
+      }
+    }
+    return false; // This date is available
+  };
+  const isRangeBooked = (startDateStr: string, endDateStr: string): boolean => {
+    // Handle empty or invalid dates
+    if (!startDateStr || !endDateStr) return false;
+
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+
+    // Check if end date is before start date
+    if (endDate < startDate) return true;
+
+    // Check against each booked range
+    for (const range of bookedDateRanges) {
+      // Check if there's any overlap between the ranges
+      if (
+        (startDate >= range.start && startDate <= range.end) || // starts during booked range
+        (endDate >= range.start && endDate <= range.end) || // ends during booked range
+        (startDate <= range.start && endDate >= range.end) // completely overlaps booked range
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  };
   const onSubmit = async (data: CarRentalFormType) => {
     console.log("✅ submitted data:", data);
-    // If you're using a hook, you'd typically call it here:
-    // const { addToast } = useToast();
-
+    if (isRangeBooked(data.pickUpDate, data.dropOffDate)) {
+      addToast({
+        title: "Invalid Date Range",
+        description:
+          "The selected date range includes unavailable dates. Please choose a different date range.",
+        color: "danger",
+      });
+      return; // Prevent submission if the range is booked
+    }
     try {
       const result = await axios.post(
         "http://localhost:5000/api/v1/booking",
@@ -184,12 +244,10 @@ export const CarRentalForm = ({
       );
       console.log("Booking successful:", result.data);
 
-      // Display a success toast
-      // The type 'success' or 'error' depends on your toast system's implementation
       addToast({
         title: "Booking Successful!",
         description: "Your car rental has been confirmed.",
-        color: "success", // Or 'success' depending on your toast system
+        color: "success",
       });
       navigate(`/success/${result.data.data._id}`);
     } catch (error) {
@@ -198,24 +256,20 @@ export const CarRentalForm = ({
 
         let errorMessage = "An unexpected error occurred. Please try again.";
         if (error.response.status === 409) {
-          // More specific message for 409 Conflict
           errorMessage =
             error.response.data.message ||
             "This car is already booked or unavailable for the selected dates. Please choose different dates or another car.";
         } else if (error.response.data && error.response.data.message) {
-          // Use the server's error message if available for other errors
           errorMessage = error.response.data.message;
         }
 
-        // Display an error toast
         addToast({
           title: "Booking Failed",
           description: errorMessage,
-          color: "danger", // Or 'danger' depending on your toast system
+          color: "danger",
         });
       } else {
         console.error("An unexpected error occurred:", error);
-        // Display a generic error toast for network issues or unhandled errors
         addToast({
           title: "Error",
           description:
@@ -225,14 +279,12 @@ export const CarRentalForm = ({
       }
     }
   };
-  // 👇 second argument logs the errors when validation fails
+
   const onError = (errors: FieldErrors<CarRentalFormType>) => {
     console.log("❌ validation errors:", errors);
-    console.log("tota price is ", totalPrice);
+    console.log("total price is ", totalPrice);
     Object.entries(errors).forEach(([fieldName, error]) => {
       const err = error as FieldError;
-
-      // pick the first available message
       const msg =
         err.message ?? (err.types ? Object.values(err.types)[0] : undefined);
 
@@ -240,11 +292,12 @@ export const CarRentalForm = ({
         addToast({
           title: `Error in ${fieldName}`,
           description: msg,
-          color: "danger", // adjust to your toast API
+          color: "danger",
         });
       }
     });
   };
+
   return (
     <Form
       validationBehavior="aria"
@@ -263,14 +316,6 @@ export const CarRentalForm = ({
           <h2 className="text-xs text-neutral-400">Step 1 of 4</h2>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {/* <Input
-            label="Name"
-            placeholder="Enter you username"
-            type="text"
-            {...register("name")}
-            isInvalid={!!errors.name}
-            errorMessage={errors.name?.message}
-          /> */}
           <Controller
             name="fullName"
             control={control}
@@ -315,14 +360,6 @@ export const CarRentalForm = ({
               />
             )}
           />
-          {/* <Input
-            label="Town / City"
-            placeholder="Town or City"
-            type="text"
-            {...register("city")}
-            isInvalid={!!errors.city}
-            errorMessage={errors.city?.message}
-          /> */}
           <Controller
             name="city"
             control={control}
@@ -350,11 +387,11 @@ export const CarRentalForm = ({
           <h2 className="text-xs text-neutral-400">Step 2 of 4</h2>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center  ">
+          <div className="flex items-center  ">
             <span className="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
             Pick-Up
           </div>
-          <div className="w-full grid grid-cols-2  gap-4">
+          <div className="w-full grid grid-cols-2  gap-4">
             <Controller
               name="pickUpLocation"
               control={control}
@@ -363,10 +400,10 @@ export const CarRentalForm = ({
                   className=" rounded-md"
                   label="Pick-up Location"
                   placeholder="Select a city"
-                  selectedKeys={new Set([field.value])} // Use selectedKey for Heroui Select
+                  selectedKeys={new Set([field.value])}
                   onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0]; // Get the first selected item
-                    field.onChange(selected); // Pass as string
+                    const selected = Array.from(keys)[0];
+                    field.onChange(selected);
                   }}
                   isInvalid={!!errors.pickUpLocation}
                   errorMessage={errors.pickUpLocation?.message}
@@ -389,7 +426,7 @@ export const CarRentalForm = ({
                       const isoString = date
                         .toDate("UTC")
                         .toISOString()
-                        .split("T")[0]; // "YYYY-MM-DD"
+                        .split("T")[0];
                       field.onChange(isoString);
                     } else {
                       field.onChange("");
@@ -397,17 +434,23 @@ export const CarRentalForm = ({
                   }}
                   isInvalid={!!errors.pickUpDate}
                   errorMessage={errors.pickUpDate?.message}
+                  // --- NEW: Pass the isDateBooked function to disable unavailable dates ---
+                  isDateUnavailable={isDateBooked}
+                  // --- NEW: Disable date picker while bookings are loading ---
+                  isDisabled={isBookingsLoading}
+                  // --- NEW: Prevent selecting dates before today ---
+                  minValue={parseDate(new Date().toISOString().split("T")[0])}
                 />
               )}
             />
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center  ">
+          <div className="flex items-center  ">
             <span className="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
             Drop-Off
           </div>
-          <div className="w-full grid grid-cols-2  gap-4">
+          <div className="w-full grid grid-cols-2  gap-4">
             <Controller
               name="dropOffLocation"
               control={control}
@@ -418,8 +461,8 @@ export const CarRentalForm = ({
                   placeholder="Select a city"
                   selectedKeys={new Set([field.value])}
                   onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0]; // Get the first selected item
-                    field.onChange(selected); // Pass as string
+                    const selected = Array.from(keys)[0];
+                    field.onChange(selected);
                   }}
                   isInvalid={!!errors.dropOffLocation}
                   errorMessage={errors.dropOffLocation?.message}
@@ -442,7 +485,7 @@ export const CarRentalForm = ({
                       const isoString = date
                         .toDate("UTC")
                         .toISOString()
-                        .split("T")[0]; // "YYYY-MM-DD"
+                        .split("T")[0];
                       field.onChange(isoString);
                     } else {
                       field.onChange("");
@@ -450,112 +493,23 @@ export const CarRentalForm = ({
                   }}
                   isInvalid={!!errors.dropOffDate}
                   errorMessage={errors.dropOffDate?.message}
+                  // --- NEW: Pass the isDateBooked function to disable unavailable dates ---
+                  isDateUnavailable={isDateBooked}
+                  // --- NEW: Disable date picker while bookings are loading ---
+                  isDisabled={isBookingsLoading}
+                  // --- NEW: Drop-off date should not be before the pick-up date (if one is selected) ---
+                  minValue={
+                    pickUpDate
+                      ? parseDate(pickUpDate)
+                      : parseDate(new Date().toISOString().split("T")[0])
+                  }
                 />
               )}
             />
           </div>
         </div>
       </section>
-      {/* <section className="w-full flex flex-col gap-8 p-4 bg-white rounded-xl">
-        {" "}
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl fontbold">Payment Info</h1>
-            <p className="text-xs text-neutral-400">
-              Please enter your payment method
-            </p>
-            <Image src={paymentCardsimage} width={200} className="-mx-2" />
-          </div>
-          <h2 className="text-xs text-neutral-400">Step 3 of 4</h2>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <Controller
-            name="firstName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="First Name"
-                placeholder="Abdi"
-                type="text"
-                isInvalid={!!errors.firstName}
-                errorMessage={errors.firstName?.message}
-              />
-            )}
-          />
 
-          <Controller
-            name="lastName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Last Name"
-                placeholder="Worku"
-                type="text"
-                isInvalid={!!errors.lastName}
-                errorMessage={errors.lastName?.message}
-              />
-            )}
-          />
-
-          <Controller
-            name="cardNumber"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Card Number"
-                placeholder="1234 **** **** ****"
-                type="text"
-                isInvalid={!!errors.cardNumber}
-                errorMessage={errors.cardNumber?.message}
-              />
-            )}
-          />
-          <div className="w-full flex gap-2 items-center justify-between">
-            <Controller
-              name="expiryDate"
-              control={control}
-              render={({ field }) => (
-                <DatePicker
-                  granularity={"month" as Granularity} // 👈 disables day selection
-                  label="Expiry Date"
-                  value={field.value ? parseExpiryDate(field.value) : null}
-                  onChange={(date) => {
-                    if (!date) {
-                      field.onChange("");
-                      return;
-                    }
-                    const formatted = `${String(date.month).padStart(
-                      2,
-                      "0"
-                    )}/${String(date.year).slice(-2)}`;
-                    field.onChange(formatted);
-                  }}
-                  isInvalid={!!errors.expiryDate}
-                  errorMessage={errors.expiryDate?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="cvc"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  label="CVC"
-                  placeholder="123"
-                  type="text"
-                  isInvalid={!!errors.cvc}
-                  errorMessage={errors.cvc?.message}
-                />
-              )}
-            />
-          </div>
-        </div>
-      </section> */}
       <section className="w-full flex flex-col gap-8 p-4 bg-white rounded-xl">
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
@@ -572,9 +526,9 @@ export const CarRentalForm = ({
           control={control}
           render={({ field }) => (
             <CheckboxGroup
-              label="Select options" // Label for the group
-              value={field.value} // Current selected values from RHF
-              onValueChange={(selectedValues) => field.onChange(selectedValues)} // Update RHF state
+              label="Select options"
+              value={field.value}
+              onValueChange={(selectedValues) => field.onChange(selectedValues)}
               isInvalid={!!errors.confirmationTerms}
               errorMessage={errors.confirmationTerms?.message}
             >
@@ -588,22 +542,21 @@ export const CarRentalForm = ({
             </CheckboxGroup>
           )}
         />
-        {/* {errors.confirmationTerms && (
-          <p style={{ color: "red", fontSize: "0.85em" }}>
-            {errors.confirmationTerms.message}
-          </p>
-        )} */}
+
         <Button
-          className={`px-20 rounded-full p-4  text-white w-fit ${
-            !isLoading ? "bg-blue-600" : "bg-blue-300"
+          className={`px-20 rounded-full p-4 text-white w-fit ${
+            !isSubmitting ? "bg-blue-600" : "bg-blue-300"
           }`}
-          disabled={isLoading}
+          disabled={isSubmitting || isBookingsLoading} // Disable if form is submitting OR bookings are loading
           type="submit"
         >
-          {isLoading ? "Loading..." : `Rent Now `}
+          {isLoading
+            ? "Submitting..."
+            : isBookingsLoading
+            ? "Checking Availability..."
+            : `Rent Now`}
         </Button>
         <div className="mt-8 flex items-center p-4 bg-blue-50 rounded-lg shadow-sm">
-          {/* Shield icon, color updated to brand color z(blue-600) */}
           <ShieldCheck className="text-blue-600 mr-3 w-6 h-6" />
           <div>
             <h4 className="font-semibold text-gray-800">

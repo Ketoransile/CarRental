@@ -7,7 +7,7 @@ export const Home = () => {
     <div className="relative min-h-screen flex flex-col gap-10  rounded-2xl  items-start justify-start pt-10 ">
       <Hero />
       <PopularCars />
-      <RecommendedCars />
+      {/* <RecommendedCars /> */}
     </div>
   );
 };

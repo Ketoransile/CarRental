@@ -6,6 +6,7 @@ import {
   // cancelBooking,
   getBookingById,
   checkCarAvailability,
+  getVehicleBookings,
 } from "../controller/BookingController";
 import { isAdmin } from "../middlewares/isAdmin";
 import { authenticatedUser } from "../middlewares/authenticatedUser";
@@ -19,6 +20,7 @@ router.post("/", authenticatedUser, createBooking);
 router.get("/:bookingId", authenticatedUser, getBookingById);
 
 router.get("/user/:userId", authenticatedUser, getUserBookings);
+router.get("/vehicle/:vehicleId", authenticatedUser, getVehicleBookings);
 
 // router.delete("/:bookingId", cancelBooking);
 

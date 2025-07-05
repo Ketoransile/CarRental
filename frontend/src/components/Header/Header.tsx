@@ -1,144 +1,182 @@
-// import { Button } from "@heroui/react";
-// import { Link, NavLink, useLocation } from "react-router";
-// import { authClient } from "../../lib/auth-client";
-// import { useEffect } from "react";
+// import { Link, NavLink, useLocation } from "react-router-dom";
 // import { useAuthStore } from "../../stores/authStore";
+// import { UserMenu } from "../UserMenu";
 
 // export const Header = () => {
 //   const location = useLocation();
-//   useEffect(() => {
-//     const fetchUserData = async () => {
-//       const { data: session, error } = await authClient.getSession();
-//       console.log("Session from header is ", session);
-//     };
-//     fetchUserData();
-//   }, []);
-//   const { user, isLoading, fetchSession, logout } = useAuthStore();
-//   const isActiveLink = (link: string) => {
-//     return location.pathname === link;
-//   };
+//   const { user } = useAuthStore();
 
 //   const navLinks = [
-//     {
-//       title: "Home",
-//       href: "/",
-//     },
-//     {
-//       title: "Vehicles",
-//       href: "/all-cars",
-//     },
-//     {
-//       title: "About us",
-//       href: "/about",
-//     },
-//     {
-//       title: "Contact US",
-//       href: "/contactUs",
-//     },
+//     { title: "Home", href: "/" },
+//     { title: "Vehicles", href: "/all-cars" },
+//     { title: "About us", href: "/about" },
+//     { title: "Contact", href: "/contactUs" },
 //   ];
+
 //   return (
-//     <div className="w-full sticky top-0 bg-white z-20  py-2 px-4 md:px-6 lg:px-10  xl:px-20 flex items-center justify-between text-base border-b border-neutral-200">
-//       <div className="flex items-center gap-4 max-w-[50%] w-full">
-//         <Link
-//           to="/"
-//           className="text-4xl font-bold text-black whitespace-nowrap"
-//         >
-//           <span className="text-blue-600">Drivezy</span>
-//         </Link>
-//         {/* <Input
-//           className="flex-1 border border-neutral-400 rounded-xl"
-//           placeholder="Search..."
-//         /> */}
+//     <header className="w-full sticky top-0 bg-white z-50 shadow-sm">
+//       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+//         {/* Logo Section */}
+//         <div className="flex items-center gap-8">
+//           <Link to="/" className="flex items-center gap-2">
+//             <span className="text-2xl md:text-3xl font-bold text-blue-600">
+//               Drivezy
+//             </span>
+//           </Link>
+
+//           {/* Navigation Links - Desktop */}
+//           <nav className="hidden md:flex items-center gap-6">
+//             {navLinks.map((navLink) => (
+//               <NavLink
+//                 to={navLink.href}
+//                 key={navLink.title}
+//                 className={({ isActive }) =>
+//                   `text-sm font-medium transition-colors hover:text-blue-600 ${
+//                     isActive ? "text-blue-600" : "text-gray-700"
+//                   }`
+//                 }
+//               >
+//                 {navLink.title}
+//               </NavLink>
+//             ))}
+//           </nav>
+//         </div>
+
+//         {/* Auth Section */}
+//         <div className="flex items-center gap-4">
+//           {user ? (
+//             <UserMenu />
+//           ) : (
+//             <div className="flex items-center gap-3">
+//               <Link
+//                 to="/login"
+//                 className="hidden sm:block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+//               >
+//                 Sign In
+//               </Link>
+//               <Link to="/register">
+//                 <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+//                   Get Started
+//                 </button>
+//               </Link>
+//             </div>
+//           )}
+//         </div>
 //       </div>
 
-//       <div className="flex items-center gap-10">
-//         <nav className="flex items-center gap-10">
-//           {navLinks.map((navLink) => (
-//             <NavLink
-//               to={navLink.href}
-//               key={navLink.title}
-//               className={`${
-//                 isActiveLink(navLink.href) ? "text-blue-600 font-bold" : ""
-//               }`}
-//             >
-//               {navLink.title}
-//             </NavLink>
-//           ))}
-//         </nav>
-//         {session?.user}
-//         <Link to="/login">
-//           <div className="bg-blue-600 text-white rounded-lg px-4 py-2 font-semibold">
-//             Get Started
-//           </div>
-//         </Link>
-//       </div>
-//     </div>
+//       {/* Mobile Navigation - Optional */}
+//       {/* <div className="md:hidden bg-gray-50 border-t">
+//         Mobile nav content here
+//       </div> */}
+//     </header>
 //   );
 // };
-import { Button } from "@heroui/react";
-import { Link, NavLink, useLocation } from "react-router-dom"; // Corrected import to react-router-dom
-import { useAuthStore } from "../../stores/authStore"; // Import your auth store
-import { useEffect } from "react"; // Keep useEffect if you still need it for other things, but for session it's handled by store initialization
+import { Link, NavLink } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore";
 import { UserMenu } from "../UserMenu";
+import { useState } from "react";
+import { X, Menu } from "lucide-react";
 
 export const Header = () => {
-  const location = useLocation();
-
-  const { user, isLoading, fetchSession, logout } = useAuthStore();
-
-  console.log("user from header is ", user);
-
-  const isActiveLink = (link: string) => {
-    return location.pathname === link;
-  };
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useAuthStore();
 
   const navLinks = [
     { title: "Home", href: "/" },
     { title: "Vehicles", href: "/all-cars" },
     { title: "About us", href: "/about" },
-    { title: "Contact US", href: "/contactUs" },
+    { title: "Contact", href: "/contactUs" },
   ];
 
   return (
-    <div className="w-full sticky top-0 bg-white z-20 py-2 px-4 md:px-6 lg:px-10 xl:px-20 flex items-center justify-between text-base border-b border-neutral-200">
-      <div className="flex items-center gap-4 max-w-[50%] w-full">
-        <Link
-          to="/"
-          className="text-4xl font-bold text-black whitespace-nowrap"
-        >
-          <span className="text-blue-600">Drivezy</span>
-        </Link>
-        {/* Search Input can go here */}
-      </div>
-
-      <div className="flex items-center gap-10">
-        <nav className="flex items-center gap-4">
-          {navLinks.map((navLink) => (
-            <NavLink
-              to={navLink.href}
-              key={navLink.title}
-              className={`${
-                isActiveLink(navLink.href) ? "text-blue-600 font-bold " : ""
-              }`}
-            >
-              {navLink.title}
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* {isLoading && (
-          <div>Loading...</div> // Or a spinner
-        )} */}
-        {user ? (
-          <UserMenu />
-        ) : (
-          <Link to="/login">
-            <div className="bg-blue-600 text-white rounded-lg px-4 py-2 font-semibold">
-              Get Started
-            </div>
+    <header className="w-full sticky top-0 bg-white z-50 shadow-sm">
+      <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+        {/* Logo Section */}
+        <div className="flex items-center gap-8">
+          <Link to="/" className="flex items-center gap-2">
+            <span className="text-2xl md:text-3xl font-bold text-blue-600">
+              Drivezy
+            </span>
           </Link>
-        )}
+
+          {/* Navigation Links - Desktop */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map((navLink) => (
+              <NavLink
+                to={navLink.href}
+                key={navLink.title}
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors hover:text-blue-600 ${
+                    isActive ? "text-blue-600" : "text-gray-700"
+                  }`
+                }
+              >
+                {navLink.title}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+
+        {/* Right Side - Mobile Menu Button or User Menu */}
+        <div className="flex items-center gap-4">
+          {user ? (
+            <UserMenu />
+          ) : (
+            <button
+              className="md:hidden text-gray-700 hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* Mobile Navigation Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t">
+          <nav className="container mx-auto px-4 py-3 flex flex-col gap-4">
+            {navLinks.map((navLink) => (
+              <NavLink
+                to={navLink.href}
+                key={navLink.title}
+                className={({ isActive }) =>
+                  `py-2 text-base font-medium transition-colors ${
+                    isActive
+                      ? "text-blue-600"
+                      : "text-gray-700 hover:text-blue-600"
+                  }`
+                }
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {navLink.title}
+              </NavLink>
+            ))}
+            {!user && (
+              <div className="flex flex-col gap-3 pt-2 border-t border-gray-100">
+                <Link
+                  to="/login"
+                  className="text-base font-medium text-gray-700 hover:text-blue-600 transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="w-full text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-base font-medium transition-colors shadow-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
+          </nav>
+        </div>
+      )}
+    </header>
   );
 };

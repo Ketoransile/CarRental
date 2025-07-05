@@ -3,7 +3,7 @@ import { Schema, model, Types } from "mongoose";
 const BookingSchema = new Schema(
   {
     userId: { type: Types.ObjectId, ref: "User", required: true },
-    vehicleId: { type: Types.ObjectId, ref: "Vehicle", required: true },
+    vehicleId: { type: Types.ObjectId, ref: "Car", required: true },
 
     fullName: { type: String, required: true },
     phoneNumber: { type: String, required: true },

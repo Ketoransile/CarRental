@@ -371,19 +371,60 @@ export const getBookingById = async (
 ) => {
   try {
     const { bookingId } = req.params;
+
     if (!bookingId) {
-      throw new AppError("Missing booking ID", 400);
+      res.status(400).json({
+        success: false,
+        status: "fail",
+        message: "Missing booking ID",
+        data: null,
+      });
+      return;
     }
-    const booking = await Booking.findOne({ _id: bookingId });
-    if (!booking) {
-      throw new AppError("No booking found with that id", 404);
-    }
+
+    const booking = await Booking.findById(bookingId);
+
     res.status(200).json({
       success: true,
-      message: "booking was fetched successfully",
-      data: booking,
+      message: booking
+        ? "Booking was fetched successfully"
+        : "No booking found with that ID",
+      data: booking || null,
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+export const getVehicleBookings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Extract the vehicleId (or vehicleId) from the request parameters
+    const { vehicleId } = req.params;
+
+    // Validate if vehicleId is provided
+    if (!vehicleId) {
+      // If vehicleId is missing, throw an AppError with a 400 status
+      throw new AppError("Missing car ID", 400);
+    }
+
+    // Find all bookings where the vehicleId matches the provided vehicleId
+    // Note: This will return an array of bookings, not just one.
+    const bookings = await Booking.find({ vehicleId: vehicleId });
+    console.log("bookings from bookcontroller functino", bookings);
+    // If no bookings are found for the given vehicleId
+
+    // If bookings are found, send a success response
+    res.status(200).json({
+      success: true,
+      message: "Bookings for the car were fetched successfully",
+      data: bookings, // Send the array of bookings
+    });
+  } catch (error) {
+    // Pass any caught error to the next middleware (error handling middleware)
     next(error);
   }
 };
@@ -393,14 +434,14 @@ export const checkCarAvailability = async (
   next: NextFunction
 ) => {
   try {
-    const { carId } = req.params;
+    const { vehicleId } = req.params;
     const { pickUpDate, dropoffDate } = req.query;
 
-    if (!carId) {
+    if (!vehicleId) {
       throw new AppError("Missing car ID", 400);
     }
 
-    const car = await Car.findOne({ _id: carId });
+    const car = await Car.findOne({ _id: vehicleId });
     if (!car) {
       throw new AppError("No car was found with that ID", 404);
     }
@@ -408,14 +449,14 @@ export const checkCarAvailability = async (
     if (!car.available) {
       res.status(200).json({
         success: true,
-        message: `Car with the ID ${carId} is currently not generally available.`,
-        data: { carId: car._id, isAvailable: false },
+        message: `Car with the ID ${vehicleId} is currently not generally available.`,
+        data: { vehicleId: car._id, isAvailable: false },
       });
       return;
     }
 
     let isDateAvailable = true;
-    let message = `Car with the ID ${carId} is available.`;
+    let message = `Car with the ID ${vehicleId} is available.`;
 
     if (pickUpDate && dropoffDate) {
       const requestedPickUp = new Date(pickUpDate as string);
@@ -426,7 +467,7 @@ export const checkCarAvailability = async (
       }
 
       const overlappingBookings = await Booking.find({
-        vehicleId: carId,
+        vehicleId: vehicleId,
         $or: [
           {
             pickUpDate: { $lt: requestedDropoff },
@@ -437,17 +478,17 @@ export const checkCarAvailability = async (
 
       if (overlappingBookings.length > 0) {
         isDateAvailable = false;
-        message = `Car with the ID ${carId} is booked for some part of the requested dates (${pickUpDate} to ${dropoffDate}).`;
+        message = `Car with the ID ${vehicleId} is booked for some part of the requested dates (${pickUpDate} to ${dropoffDate}).`;
       }
     } else {
-      message = `Car with the ID ${carId} is generally available (no specific dates checked).`;
+      message = `Car with the ID ${vehicleId} is generally available (no specific dates checked).`;
     }
 
     res.status(200).json({
       success: true,
       message: message,
       data: {
-        carId: car._id,
+        vehicleId: car._id,
         isAvailable: isDateAvailable,
       },
     });
