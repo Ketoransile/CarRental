@@ -51,11 +51,11 @@ export const UserMenu = () => {
         </div>
       </DropdownTrigger>
       <DropdownMenu aria-label="User Menu" onAction={handleAction}>
-        <DropdownItem key="home">Home</DropdownItem>
-        <DropdownItem key="about">About</DropdownItem>
-        <DropdownItem key="profile">Profile</DropdownItem>
+        {/* <DropdownItem key="home">Home</DropdownItem> */}
+        {/* <DropdownItem key="about">About</DropdownItem> */}
         <DropdownItem key={`my-bookings/${userId}`}>My Bookings</DropdownItem>
-        <DropdownItem key="settings">Settings</DropdownItem>
+        {/* <DropdownItem key="profile">Profile</DropdownItem> */}
+        {/* <DropdownItem key="settings">Settings</DropdownItem> */}
         <DropdownItem key="logout" className="text-red-500">
           Logout
         </DropdownItem>

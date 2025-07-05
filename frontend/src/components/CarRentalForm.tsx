@@ -387,11 +387,11 @@ export const CarRentalForm = ({
           <h2 className="text-xs text-neutral-400">Step 2 of 4</h2>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center  ">
+          <div className="flex items-center ">
             <span className="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
             Pick-Up
           </div>
-          <div className="w-full grid grid-cols-2  gap-4">
+          <div className="w-full grid grid-cols-2 gap-4">
             <Controller
               name="pickUpLocation"
               control={control}
@@ -446,11 +446,11 @@ export const CarRentalForm = ({
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center  ">
+          <div className="flex items-center ">
             <span className="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
             Drop-Off
           </div>
-          <div className="w-full grid grid-cols-2  gap-4">
+          <div className="w-full grid grid-cols-2 gap-4">
             <Controller
               name="dropOffLocation"
               control={control}

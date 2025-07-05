@@ -55,77 +55,52 @@
 //   const filteredCars = filterCars(cars);
 //   return <CarsList cars={filteredCars} />;
 // };
+import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useCarStore, type FCar } from "../../stores/useCarStore";
 import { CarsList } from "../../components/CarsList";
-import { useCarStore } from "../../stores/useCarStore";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { useEffect } from "react";
 
 export const CarsPage = () => {
   const [searchParams] = useSearchParams();
   const { cars, loading, error, fetchCars } = useCarStore();
 
   useEffect(() => {
+    // fetch once per mount – the store keeps data cached
     fetchCars();
   }, [fetchCars]);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <LoadingSpinner className="text-blue-600" size="lg" />
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg
-              className="h-5 w-5 text-red-500"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-red-700">Error: {error}</p>
-          </div>
-        </div>
-      </div>
-    );
-
-  const selectedMakes = searchParams.get("make")?.split(",") || [];
-  const selectedTypes = searchParams.get("type")?.split(",") || [];
+  /* --------- Derive active filters from the URL --------- */
+  const selectedMakes = searchParams.get("make")?.split(",") ?? [];
+  const selectedTypes = searchParams.get("type")?.split(",") ?? [];
   const selectedTransmissions =
-    searchParams.get("transmission")?.split(",") || [];
-  const selectedFuelTypes = searchParams.get("fuelType")?.split(",") || [];
+    searchParams.get("transmission")?.split(",") ?? [];
+  const selectedFuelTypes = searchParams.get("fuelType")?.split(",") ?? [];
 
-  const filterCars = (carsToFilter: FCar[]) => {
-    return carsToFilter.filter((car) => {
-      const isMakeMatch =
-        selectedMakes.length === 0 || selectedMakes.includes(car.make);
-      const isTypeMatch =
-        selectedTypes.length === 0 || selectedTypes.includes(car.type);
-      const isTransmissionMatch =
-        selectedTransmissions.length === 0 ||
-        selectedTransmissions.includes(car.transmission);
-      const isFuelTypeMatch =
-        selectedFuelTypes.length === 0 ||
-        (car.fuelType !== undefined &&
-          selectedFuelTypes.includes(car.fuelType));
+  /* --------- Memoised filtering --------- */
+  const filteredCars = useMemo(() => {
+    const match = (arr: string[], value?: string) =>
+      arr.length === 0 || (value && arr.includes(value));
 
-      return (
-        isMakeMatch && isTypeMatch && isTransmissionMatch && isFuelTypeMatch
-      );
-    });
-  };
+    return cars.filter(
+      (c: FCar) =>
+        match(selectedMakes, c.make) &&
+        match(selectedTypes, c.type) &&
+        match(selectedTransmissions, c.transmission) &&
+        match(selectedFuelTypes, c.fuelType)
+    );
+  }, [
+    cars,
+    selectedMakes,
+    selectedTypes,
+    selectedTransmissions,
+    selectedFuelTypes,
+  ]);
 
-  const filteredCars = filterCars(cars);
+  /* --------- UI states --------- */
+  if (loading) return <LoadingSpinner />;
+  if (error)
+    return <p className="p-8 text-center text-red-600">Error: {error}</p>;
+
   return <CarsList cars={filteredCars} />;
 };

@@ -11,7 +11,7 @@ export const Hero = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-16 items-center justify-center px-4 md:px-8 lg:px-16 py-12">
+    <div className="w-full flex flex-col gap-16 items-center justify-center px-4 md:px-8 lg:px-16 py-14">
       {/* Headline Section */}
       <motion.div
         className="w-full max-w-4xl flex flex-col gap-6 items-center justify-center text-center"

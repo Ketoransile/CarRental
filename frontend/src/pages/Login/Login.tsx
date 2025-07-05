@@ -66,9 +66,9 @@ import { LoginForm } from "../../components/LoginForm";
 
 export const Login = () => {
   return (
-    <div className="w-full flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-100 p-4 sm:p-8">
+    <div className="w-full flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-100 py-4 sm:p-8">
       {/* Left Column - Form */}
-      <div className="w-full lg:w-1/2 flex flex-col gap-6 items-center justify-center py-8 sm:py-12 lg:py-16 bg-white rounded-2xl shadow-xl mb-8 lg:mb-0 lg:mr-4">
+      <div className="w-full lg:w-1/2 flex flex-col gap-6 items-center justify-center px-4 py-8 sm:py-12 lg:py-16 bg-white rounded-2xl shadow-xl mb-8 lg:mb-0 lg:mr-4">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-800 mb-2 sm:mb-4">
           Welcome Back!
         </h1>
