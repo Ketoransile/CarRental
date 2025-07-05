@@ -39,6 +39,9 @@ app.get("/", (req, res) => {
 // app.all("*", (req, res, next) => {
 //   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 // });
+app.get("*", (req, res) => {
+  res.send("Hello World!");
+});
 app.use(errorHandler);
 
 const startServer = async () => {
