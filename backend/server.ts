@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3000, https://drivezy-frontend.vercel.app",
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
