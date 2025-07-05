@@ -94,7 +94,7 @@ type CarStore = {
 };
 
 // Centralize your API base URL
-const API_BASE_URL = "http://localhost:5000/api/v1/car"; // Assuming '/car' endpoint for single operations
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/car`; // Assuming '/car' endpoint for single operations
 
 export const useCarStore = create<CarStore>((set, get) => ({
   // --- START: Previously defined initial state and action ---

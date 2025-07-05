@@ -134,7 +134,7 @@ export const CarBookingPage = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:5000/api/v1/car/getCar/${id}`,
+          `${import.meta.env.VITE_API_URL}/api/v1/car/getCar/${id}`,
           { withCredentials: true }
         );
         setCar(res.data.data);

@@ -136,8 +136,9 @@ export const CarRentalForm = ({
       setIsBookingsLoading(true); // Start loading
       try {
         console.log("Car id is ", car._id);
+        const url = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.get(
-          `http://localhost:5000/api/v1/booking/vehicle/${car._id}`, // Make sure this is your correct backend endpoint
+          `${url}/api/v1/booking/vehicle/${car._id}`, // Make sure this is your correct backend endpoint
           { withCredentials: true }
         );
         console.log("Response", response);
@@ -238,7 +239,7 @@ export const CarRentalForm = ({
     }
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/v1/booking",
+        `${import.meta.env.VITE_API_URL}/api/v1/booking`,
         data,
         { withCredentials: true }
       );

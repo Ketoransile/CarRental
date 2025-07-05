@@ -13,13 +13,13 @@ import { AppError, errorHandler } from "./middlewares/errorHandler";
 import { connectDB } from "./config/db";
 import { isAdmin } from "./middlewares/isAdmin";
 const app = express();
-const origins = ["http://localhost:3000"];
+const origins = ["http://localhost:3000, https://drivezy-frontend.vercel.app"];
 const PORT = process.env.PORT || 5000;
 app.use(cookieParser());
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000, https://drivezy-frontend.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
