@@ -18,20 +18,6 @@ export const UserMenu = () => {
     return null;
   }
 
-  // const getUserInitials = (user: { name?: string; email: string }) => {
-  //   if (user.name) {
-  //     return user.name
-  //       .split(" ")
-  //       .map((n) => n[0])
-  //       .join("")
-  //       .toUpperCase()
-  //       .substring(0, 2);
-  //   }
-  //   return user.email[0].toUpperCase();
-  // };
-
-  // const userDisplayName = user.name || user.email;
-
   const handleAction = (key: React.Key) => {
     if (key === "logout") {
       logout();

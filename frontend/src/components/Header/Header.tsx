@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { FaBars } from "react-icons/fa"; // mobile “hamburger” icon
 import { LuX } from "react-icons/lu"; // close icon
@@ -8,13 +8,22 @@ import { authClient } from "../../lib/auth-client";
 
 export const Header = () => {
   const location = useLocation();
-  const { user, logout } = useAuthStore();
+  const { user, logout, setUser } = useAuthStore();
   const {
     data: session,
     isPending, //loading state
     error, //error object
     refetch, //refetch the session
   } = authClient.useSession();
+  useEffect(() => {
+    if (session?.user) {
+      setUser({
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.name || undefined,
+      });
+    }
+  }, [session, setUser]);
   console.log("session from header", session);
   const [mobileOpen, setMobileOpen] = useState(false);
   console.log("user from headr is", user);

@@ -8,7 +8,7 @@ function App() {
   const fetchSession = useAuthStore((s) => s.fetchSession);
 
   useEffect(() => {
-    fetchSession();
+    fetchSession(); // ✅ triggers once on app load
   }, [fetchSession]);
   return (
     <div className="bg-white text-black">
