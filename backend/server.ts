@@ -29,7 +29,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
   })
 );
-app.all("/api/auth/*splat", toNodeHandler(auth));
+app.all("/api/auth/{*any}", toNodeHandler(auth));
 app.use(express.json());
 
 // Routes
