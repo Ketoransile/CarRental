@@ -3,12 +3,12 @@ import {
   Button,
   DatePicker,
   Form,
-  Image,
+  // Image,
   Input,
 } from "@heroui/react";
 import type React from "react";
 import { Select, SelectItem } from "@heroui/react";
-import paymentCardsimage from "../assets/paymentCards.png";
+// import paymentCardsimage from "../assets/paymentCards.png";
 import { CheckboxGroup, Checkbox } from "@heroui/react";
 import { ShieldCheck } from "lucide-react";
 import {
@@ -20,9 +20,9 @@ import {
 import type { CarRentalFormType } from "../types/carRentalFormType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CarRentalSchema } from "../schemas/carRentalSchema";
-import { CalendarDate, parseDate } from "@internationalized/date";
+import { parseDate } from "@internationalized/date";
 import type { DateValue } from "@internationalized/date";
-import type { Granularity } from "@react-types/datepicker";
+// import type { Granularity } from "@react-types/datepicker";
 import { useNavigate } from "react-router-dom";
 import type { ICar } from "../types/car";
 import { useEffect, useState } from "react"; // Import useState here

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { type ChangeEvent } from "react";
 // IMPORTANT: Ensure '@heroui/react' is installed in your project.
 // This is where the 'Input' component comes from.
 import { Input } from "@heroui/react";
 // This is where the 'ChevronDown' icon comes from. Ensure 'lucide-react' is also installed.
 import { ChevronDown } from "lucide-react";
 // Type for handling input change events.
-import { ChangeEvent } from "react";
+// import { ChangeEvent } from "react";
 
 // Define the shape of the data specific to the Rental Info form section.
 // This interface ensures type safety for the data handled by this component.

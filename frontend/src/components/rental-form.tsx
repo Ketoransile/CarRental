@@ -1,13 +1,13 @@
 import React from "react";
 // Ensure these libraries are installed via npm/yarn
 import { Button } from "@heroui/react";
-import { ChevronDown } from "lucide-react"; // Only needed if you use it directly in RentalProcess, otherwise keep it in sub-components
+// import { ChevronDown } from "lucide-react"; // Only needed if you use it directly in RentalProcess, otherwise keep it in sub-components
 
 // Adjust these paths based on where RentalProcess.tsx is located relative to your components folder.
 // Assuming RentalProcess.tsx is in 'src/' and sub-components are in 'src/components/'
 import BillingInfoForm from "../components/BillingInfoForm";
 import RentalInfoForm from "../components/RentalInfoForm";
-import PaymentMethodForm from "../components/PaymentMethodForm";
+// import PaymentMethodForm from "../components/PaymentMethodForm";
 import ConfirmationForm from "../components/ConfirmationForm";
 
 // Define combined form data types

@@ -1,4 +1,4 @@
-import { Image } from "@heroui/react";
+// import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 

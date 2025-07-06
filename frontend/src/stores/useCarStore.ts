@@ -1,6 +1,61 @@
-// import { create } from "zustand";
+// // import { create } from "zustand";
 
+// // import axios from "axios";
+// // export type FCar = {
+// //   _id: string;
+// //   make: string;
+// //   model: string;
+// //   year: number;
+// //   type: string;
+// //   transmission: "Automatic" | "Manual"; // Assuming only these two options
+// //   seats: number;
+// //   doors: number;
+// //   pricePerDay: number;
+// //   available: boolean;
+// //   mileage: number;
+// //   fuelType: "Gasoline" | "Electric" | "Diesel" | "Hybrid"; // Common fuel types
+// //   ac: boolean;
+// //   image: string; // This will hold the imported image path/URL
+// //   features: string[];
+// //   description: string;
+// // };
+
+// // type CarStore = {
+// //   cars: FCar[];
+// //   loading: boolean;
+// //   error: string | null;
+// //   fetchCars: () => Promise<void>;
+// // };
+
+// // export const useCarStore = create<CarStore>((set) => ({
+// //   cars: [],
+// //   loading: false,
+// //   error: null,
+// //   fetchCars: async () => {
+// //     try {
+// //       set({ loading: true, error: null });
+// //       const res = await axios.get(
+// //         "http://localhost:5000/api/v1/car/getAllCars",
+// //         { withCredentials: true }
+// //       );
+// //       // console.log("res from fetchCars function ", res);
+// //       set({ cars: res.data.data, loading: false });
+// //     } catch (error: any) {
+// //       set({
+// //         error:
+// //           error?.response?.data?.message ||
+// //           error.message ||
+// //           "Something went wrong",
+// //         loading: false,
+// //       });
+// //     }
+// //   },
+// // }));
+// // src/stores/useCarStore.ts
+// import { create } from "zustand";
 // import axios from "axios";
+
+// // Define the type for a single car
 // export type FCar = {
 //   _id: string;
 //   make: string;
@@ -20,155 +75,244 @@
 //   description: string;
 // };
 
+// // --- START: Previously defined types and initial state ---
 // type CarStore = {
 //   cars: FCar[];
-//   loading: boolean;
-//   error: string | null;
+//   loading: boolean; // For the 'cars' list
+//   error: string | null; // For the 'cars' list
 //   fetchCars: () => Promise<void>;
+//   // --- END: Previously defined types and initial state ---
+
+//   // --- START: Newly added properties and actions for single car ---
+//   selectedCar: FCar | null;
+//   loadingSelectedCar: boolean; // Specific loading for selected car
+//   errorSelectedCar: string | null; // Specific error for selected car
+//   fetchSingleCar: (id: string) => Promise<void>;
+//   setSelectedCarFromList: (id: string) => void; // To pick from already fetched list
+//   clearSelectedCar: () => void; // To clear selected car state
+//   // --- END: Newly added properties and actions for single car ---
 // };
 
-// export const useCarStore = create<CarStore>((set) => ({
+// // Centralize your API base URL
+// const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/car`; // Assuming '/car' endpoint for single operations
+// console.log("API base url from usecarstore is", API_BASE_URL);
+// export const useCarStore = create<CarStore>((set, get) => ({
+//   // --- START: Previously defined initial state and action ---
 //   cars: [],
-//   loading: false,
-//   error: null,
+//   loading: false, // Initial state for 'cars' list loading
+//   error: null, // Initial state for 'cars' list error
+
 //   fetchCars: async () => {
 //     try {
-//       set({ loading: true, error: null });
+//       set({ loading: true, error: null }); // Use 'loading' and 'error' for the 'cars' list
 //       const res = await axios.get(
-//         "http://localhost:5000/api/v1/car/getAllCars",
+//         `${API_BASE_URL}/getAllCars`, // Use the centralized base URL
 //         { withCredentials: true }
 //       );
-//       // console.log("res from fetchCars function ", res);
 //       set({ cars: res.data.data, loading: false });
 //     } catch (error: any) {
+//       console.error("Failed to fetch all cars:", error);
 //       set({
 //         error:
 //           error?.response?.data?.message ||
 //           error.message ||
-//           "Something went wrong",
+//           "Failed to fetch car list. Something went wrong.",
 //         loading: false,
 //       });
 //     }
 //   },
+//   // --- END: Previously defined initial state and action ---
+
+//   // --- START: Newly added initial state and actions for single car ---
+//   selectedCar: null,
+//   loadingSelectedCar: false,
+//   errorSelectedCar: null,
+
+//   fetchSingleCar: async (id) => {
+//     set({ loadingSelectedCar: true, errorSelectedCar: null });
+//     try {
+//       const res = await axios.get(
+//         `${API_BASE_URL}/getCar/${id}`, // Corrected URL with base and dynamic ID
+//         { withCredentials: true }
+//       );
+//       set({ selectedCar: res.data.data, loadingSelectedCar: false });
+//     } catch (error: any) {
+//       console.error(`Failed to fetch car with ID ${id}:`, error);
+//       set({
+//         errorSelectedCar:
+//           error?.response?.data?.message ||
+//           error.message ||
+//           `Failed to load car details for ID: ${id}. Something went wrong.`,
+//         loadingSelectedCar: false,
+//       });
+//     }
+//   },
+
+//   setSelectedCarFromList: (id: string) => {
+//     const { cars } = get(); // Use get() to access the current 'cars' state
+//     const car = cars.find((c) => c._id === id);
+//     if (car) {
+//       set({ selectedCar: car, errorSelectedCar: null });
+//     } else {
+//       // If car not found in list, consider fetching it or setting an error
+//       set({
+//         selectedCar: null,
+//         errorSelectedCar:
+//           "Car not found in the loaded list. You might need to fetch it.",
+//       });
+//     }
+//   },
+
+//   clearSelectedCar: () => {
+//     set({
+//       selectedCar: null,
+//       errorSelectedCar: null,
+//       loadingSelectedCar: false,
+//     });
+//   },
+//   // --- END: Newly added initial state and actions for single car ---
 // }));
 // src/stores/useCarStore.ts
 import { create } from "zustand";
 import axios from "axios";
 
-// Define the type for a single car
+/* ------------------------------------------------------------------ */
+/*  Types                                                             */
+/* ------------------------------------------------------------------ */
+
 export type FCar = {
   _id: string;
   make: string;
   model: string;
   year: number;
   type: string;
-  transmission: "Automatic" | "Manual"; // Assuming only these two options
+  transmission: "Automatic" | "Manual";
   seats: number;
   doors: number;
   pricePerDay: number;
   available: boolean;
   mileage: number;
-  fuelType: "Gasoline" | "Electric" | "Diesel" | "Hybrid"; // Common fuel types
+  fuelType: "Gasoline" | "Electric" | "Diesel" | "Hybrid";
   ac: boolean;
-  image: string; // This will hold the imported image path/URL
+  image: string;
   features: string[];
   description: string;
 };
 
-// --- START: Previously defined types and initial state ---
-type CarStore = {
-  cars: FCar[];
-  loading: boolean; // For the 'cars' list
-  error: string | null; // For the 'cars' list
-  fetchCars: () => Promise<void>;
-  // --- END: Previously defined types and initial state ---
-
-  // --- START: Newly added properties and actions for single car ---
-  selectedCar: FCar | null;
-  loadingSelectedCar: boolean; // Specific loading for selected car
-  errorSelectedCar: string | null; // Specific error for selected car
-  fetchSingleCar: (id: string) => Promise<void>;
-  setSelectedCarFromList: (id: string) => void; // To pick from already fetched list
-  clearSelectedCar: () => void; // To clear selected car state
-  // --- END: Newly added properties and actions for single car ---
+type FilterParams = {
+  make?: string; // "Toyota,Hyundai"
+  type?: string; // "SUV,Sedan"
+  transmission?: string; // "Automatic"
+  fuelType?: string; // "Diesel,Electric"
+  page?: number;
+  limit?: number;
 };
 
-// Centralize your API base URL
-const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/car`; // Assuming '/car' endpoint for single operations
-console.log("API base url from usecarstore is", API_BASE_URL);
-export const useCarStore = create<CarStore>((set, get) => ({
-  // --- START: Previously defined initial state and action ---
-  cars: [],
-  loading: false, // Initial state for 'cars' list loading
-  error: null, // Initial state for 'cars' list error
+type CarStore = {
+  /* list state */
+  cars: FCar[];
+  loading: boolean;
+  error: string | null;
+  fetchCars: (filters?: FilterParams) => Promise<void>;
 
-  fetchCars: async () => {
+  /* single‑car state */
+  selectedCar: FCar | null;
+  loadingSelectedCar: boolean;
+  errorSelectedCar: string | null;
+  fetchSingleCar: (id: string) => Promise<void>;
+  setSelectedCarFromList: (id: string) => void;
+  clearSelectedCar: () => void;
+};
+
+/* ------------------------------------------------------------------ */
+/*  Config                                                            */
+/* ------------------------------------------------------------------ */
+
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1`; // ← no trailing slash
+//   list  →  `${API_BASE_URL}/cars`
+//   single→  `${API_BASE_URL}/car/:id`
+
+/* ------------------------------------------------------------------ */
+/*  Store                                                             */
+/* ------------------------------------------------------------------ */
+
+export const useCarStore = create<CarStore>((set, get) => ({
+  /* ─────────────── list ─────────────── */
+  cars: [],
+  loading: false,
+  error: null,
+
+  fetchCars: async (filters = {}) => {
     try {
-      set({ loading: true, error: null }); // Use 'loading' and 'error' for the 'cars' list
-      const res = await axios.get(
-        `${API_BASE_URL}/getAllCars`, // Use the centralized base URL
-        { withCredentials: true }
-      );
-      set({ cars: res.data.data, loading: false });
-    } catch (error: any) {
-      console.error("Failed to fetch all cars:", error);
+      set({ loading: true, error: null });
+
+      /* build URL with query‑string */
+      const url = new URL(`${API_BASE_URL}/car/getAllCars`);
+      Object.entries(filters).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && `${v}`.length > 0)
+          url.searchParams.set(k, `${v}`);
+      });
+
+      const { data } = await axios.get(url.toString(), {
+        withCredentials: true,
+      });
+
+      set({ cars: data.data, loading: false });
+    } catch (err: any) {
+      console.error("Failed to fetch cars:", err);
       set({
-        error:
-          error?.response?.data?.message ||
-          error.message ||
-          "Failed to fetch car list. Something went wrong.",
         loading: false,
+        error:
+          err?.response?.data?.message ||
+          err.message ||
+          "Failed to fetch cars. Something went wrong.",
       });
     }
   },
-  // --- END: Previously defined initial state and action ---
 
-  // --- START: Newly added initial state and actions for single car ---
+  /* ─────────────── single car ─────────────── */
   selectedCar: null,
   loadingSelectedCar: false,
   errorSelectedCar: null,
 
   fetchSingleCar: async (id) => {
-    set({ loadingSelectedCar: true, errorSelectedCar: null });
     try {
-      const res = await axios.get(
-        `${API_BASE_URL}/getCar/${id}`, // Corrected URL with base and dynamic ID
-        { withCredentials: true }
-      );
-      set({ selectedCar: res.data.data, loadingSelectedCar: false });
-    } catch (error: any) {
-      console.error(`Failed to fetch car with ID ${id}:`, error);
+      set({ loadingSelectedCar: true, errorSelectedCar: null });
+
+      const { data } = await axios.get(`${API_BASE_URL}/car/getCar/${id}`, {
+        withCredentials: true,
+      });
+
+      set({ selectedCar: data.data, loadingSelectedCar: false });
+    } catch (err: any) {
+      console.error(`Failed to fetch car ${id}:`, err);
       set({
-        errorSelectedCar:
-          error?.response?.data?.message ||
-          error.message ||
-          `Failed to load car details for ID: ${id}. Something went wrong.`,
         loadingSelectedCar: false,
+        errorSelectedCar:
+          err?.response?.data?.message ||
+          err.message ||
+          `Failed to load car ${id}.`,
       });
     }
   },
 
-  setSelectedCarFromList: (id: string) => {
-    const { cars } = get(); // Use get() to access the current 'cars' state
-    const car = cars.find((c) => c._id === id);
+  setSelectedCarFromList: (id) => {
+    const car = get().cars.find((c) => c._id === id);
     if (car) {
       set({ selectedCar: car, errorSelectedCar: null });
     } else {
-      // If car not found in list, consider fetching it or setting an error
       set({
         selectedCar: null,
         errorSelectedCar:
-          "Car not found in the loaded list. You might need to fetch it.",
+          "Car not found in the loaded list. Try fetching it first.",
       });
     }
   },
 
-  clearSelectedCar: () => {
+  clearSelectedCar: () =>
     set({
       selectedCar: null,
-      errorSelectedCar: null,
       loadingSelectedCar: false,
-    });
-  },
-  // --- END: Newly added initial state and actions for single car ---
+      errorSelectedCar: null,
+    }),
 }));

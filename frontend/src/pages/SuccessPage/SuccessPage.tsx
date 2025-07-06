@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import checkmark from "../../assets/checkmark.png";
 import { authClient } from "../../lib/auth-client";
 export const SuccessPage = () => {
-  const { data: session, isPending, error, refetch } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
   const [userId, setUserId] = useState<string>("");
 

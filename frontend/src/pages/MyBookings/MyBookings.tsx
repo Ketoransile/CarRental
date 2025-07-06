@@ -360,7 +360,7 @@ import {
   CarFront,
   MapPin,
   CalendarDays,
-  Phone,
+  // Phone,
   X,
   ArrowRight,
   Info,
@@ -410,7 +410,7 @@ export const MyBookings: React.FC = () => {
 
   // Responsive breakpoints
   const isMobile = window.innerWidth < 768;
-  const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+  // const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
   return (
     <div className="w-full min-h-screen p-4 sm:p-6 lg:p-8">

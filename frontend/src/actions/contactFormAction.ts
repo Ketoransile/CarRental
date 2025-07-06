@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { ActionResponse, ContactFormData } from "../types/contactFormType";
-import { addToast, Toast } from "@heroui/toast";
+import { addToast } from "@heroui/toast";
 
 const messageSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -22,7 +22,7 @@ const messageSchema = z.object({
 });
 
 export async function submitMessage(
-  prevState: ActionResponse | null,
+  _prevState: ActionResponse | null,
   formData: FormData
 ): Promise<ActionResponse> {
   try {

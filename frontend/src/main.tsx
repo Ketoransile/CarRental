@@ -12,7 +12,7 @@ import { DashboardLayout } from "./layouts/DashboardLayout.tsx";
 import { CarDetailPage } from "./pages/CarDetail/CarDetailPage.tsx";
 import { ContactUsPage } from "./pages/Contact/ContactUsPage.tsx";
 import { CarBookingPage } from "./pages/CarBookingPage/CarBookingPage.tsx";
-import { BookingPageLoader } from "./loaders/CarBookingPageLoader.ts";
+// import { BookingPageLoader } from "./loaders/CarBookingPageLoader.ts";
 import { SuccessPage } from "./pages/SuccessPage/SuccessPage.tsx";
 import { Login } from "./pages/Login/Login.tsx";
 import { Register } from "./pages/Register/Register.tsx";

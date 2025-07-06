@@ -160,19 +160,20 @@ export const LoginForm: React.FC = () => {
   const onSubmit = async () => {
     try {
       const values = watch();
-      const { data, error } = await authClient.signIn.email(
+      // const { data, error } = await authClient.signIn.email(
+      await authClient.signIn.email(
         {
           email: values.email,
           password: values.password,
         },
         {
-          onRequest: (ctx) => {
+          onRequest: () => {
             // show loading
           },
-          onSuccess: async (ctx) => {
+          onSuccess: async () => {
             await fetchSession();
             addToast({
-              title: "Logged in successfully, redirecting...",
+              title: "Logged in successfully",
             });
             navigate("/");
           },

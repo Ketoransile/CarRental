@@ -12,6 +12,7 @@ import { isAdmin } from "../middlewares/isAdmin";
 
 const route = Router();
 route.post("/create", isAdmin, createCar);
+// route.get("/getCar/:id", getSingleCar);
 route.get("/getCar/:id", getSingleCar);
 route.get("/getAllCars", getAllCars);
 route.delete("/deleteCar/:id", isAdmin, deleteSingleCar);

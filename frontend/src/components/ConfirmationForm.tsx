@@ -3,7 +3,7 @@ import React from "react";
 import { Checkbox } from "@heroui/react";
 // ShieldCheck icon for visual element. Ensure 'lucide-react' is installed.
 import { ShieldCheck } from "lucide-react";
-import { ChangeEvent } from "react"; // For handling checkbox change events
+// import { ChangeEvent } from "react"; // For handling checkbox change events
 
 // Define the shape of the data specific to the Confirmation form section
 interface ConfirmationFormData {

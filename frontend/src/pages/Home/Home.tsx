@@ -1,6 +1,6 @@
 import { Hero } from "../../components/Hero/Hero";
 import { PopularCars } from "../../components/PopularCars";
-import { RecommendedCars } from "../../components/RecommendedCars";
+// import { RecommendedCars } from "../../components/RecommendedCars";
 
 export const Home = () => {
   return (

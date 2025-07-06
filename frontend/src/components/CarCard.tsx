@@ -1,6 +1,6 @@
 import { Button, Image } from "@heroui/react";
 import { Link } from "react-router";
-import type { ICar } from "../types/car";
+// import type { ICar } from "../types/car";
 import { FaUserFriends } from "react-icons/fa"; // Seat: Group of users
 import { LuGauge } from "react-icons/lu"; // Mileage: Gauge for distance or speed
 import { FaGasPump } from "react-icons/fa";

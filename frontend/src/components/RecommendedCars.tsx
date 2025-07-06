@@ -1,13 +1,13 @@
 import { Button } from "@heroui/react";
 import { Link } from "react-router";
-import type { ICar } from "../types/car";
-import { cars } from "../utils/dummyCarDetails";
+// import type { ICar } from "../types/car";
+// import { cars } from "../utils/dummyCarDetails";
 import { CarCard } from "./CarCard";
 import {
-  FaArrowRight,
+  // FaArrowRight,
   FaLongArrowAltRight,
-  FaAngleRight,
-  FaChevronRight,
+  // FaAngleRight,
+  // FaChevronRight,
 } from "react-icons/fa";
 import { useEffect } from "react";
 import { useCarStore, type FCar } from "../stores/useCarStore";

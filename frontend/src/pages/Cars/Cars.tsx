@@ -55,9 +55,59 @@
 //   const filteredCars = filterCars(cars);
 //   return <CarsList cars={filteredCars} />;
 // };
-import { useEffect, useMemo } from "react";
+// import { useEffect, useMemo } from "react";
+// import { useSearchParams } from "react-router-dom";
+// import { useCarStore, type FCar } from "../../stores/useCarStore";
+// import { CarsList } from "../../components/CarsList";
+// import { LoadingSpinner } from "../../components/LoadingSpinner";
+
+// export const CarsPage = () => {
+//   const [searchParams] = useSearchParams();
+//   const { cars, loading, error, fetchCars } = useCarStore();
+
+//   useEffect(() => {
+//     // fetch once per mount – the store keeps data cached
+//     fetchCars();
+//   }, [fetchCars]);
+
+//   /* --------- Derive active filters from the URL --------- */
+//   const selectedMakes = searchParams.get("make")?.split(",") ?? [];
+//   const selectedTypes = searchParams.get("type")?.split(",") ?? [];
+//   const selectedTransmissions =
+//     searchParams.get("transmission")?.split(",") ?? [];
+//   const selectedFuelTypes = searchParams.get("fuelType")?.split(",") ?? [];
+
+//   /* --------- Memoised filtering --------- */
+//   const filteredCars = useMemo(() => {
+//     const match = (arr: string[], value?: string) =>
+//       arr.length === 0 || (value && arr.includes(value));
+
+//     return cars.filter(
+//       (c: FCar) =>
+//         match(selectedMakes, c.make) &&
+//         match(selectedTypes, c.type) &&
+//         match(selectedTransmissions, c.transmission) &&
+//         match(selectedFuelTypes, c.fuelType)
+//     );
+//   }, [
+//     cars,
+//     selectedMakes,
+//     selectedTypes,
+//     selectedTransmissions,
+//     selectedFuelTypes,
+//   ]);
+
+//   /* --------- UI states --------- */
+//   if (loading) return <LoadingSpinner />;
+//   if (error)
+//     return <p className="p-8 text-center text-red-600">Error: {error}</p>;
+
+//   return <CarsList cars={filteredCars} />;
+// };
+// pages/CarsPage.tsx
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useCarStore, type FCar } from "../../stores/useCarStore";
+import { useCarStore } from "../../stores/useCarStore";
 import { CarsList } from "../../components/CarsList";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 
@@ -65,42 +115,19 @@ export const CarsPage = () => {
   const [searchParams] = useSearchParams();
   const { cars, loading, error, fetchCars } = useCarStore();
 
+  /* 🔁 refetch every time the URL’s filters change */
   useEffect(() => {
-    // fetch once per mount – the store keeps data cached
-    fetchCars();
-  }, [fetchCars]);
+    fetchCars({
+      make: searchParams.get("make") ?? undefined,
+      type: searchParams.get("type") ?? undefined,
+      transmission: searchParams.get("transmission") ?? undefined,
+      fuelType: searchParams.get("fuelType") ?? undefined,
+      // page / limit later…
+    });
+  }, [searchParams, fetchCars]);
 
-  /* --------- Derive active filters from the URL --------- */
-  const selectedMakes = searchParams.get("make")?.split(",") ?? [];
-  const selectedTypes = searchParams.get("type")?.split(",") ?? [];
-  const selectedTransmissions =
-    searchParams.get("transmission")?.split(",") ?? [];
-  const selectedFuelTypes = searchParams.get("fuelType")?.split(",") ?? [];
-
-  /* --------- Memoised filtering --------- */
-  const filteredCars = useMemo(() => {
-    const match = (arr: string[], value?: string) =>
-      arr.length === 0 || (value && arr.includes(value));
-
-    return cars.filter(
-      (c: FCar) =>
-        match(selectedMakes, c.make) &&
-        match(selectedTypes, c.type) &&
-        match(selectedTransmissions, c.transmission) &&
-        match(selectedFuelTypes, c.fuelType)
-    );
-  }, [
-    cars,
-    selectedMakes,
-    selectedTypes,
-    selectedTransmissions,
-    selectedFuelTypes,
-  ]);
-
-  /* --------- UI states --------- */
   if (loading) return <LoadingSpinner />;
   if (error)
     return <p className="p-8 text-center text-red-600">Error: {error}</p>;
-
-  return <CarsList cars={filteredCars} />;
+  return <CarsList cars={cars} />;
 };

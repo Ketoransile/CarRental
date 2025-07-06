@@ -1,7 +1,8 @@
 import React from "react";
+import type { ChangeEvent } from "react";
 // IMPORTANT: Ensure '@heroui/react' is installed in your project.
 import { Input } from "@heroui/react";
-import { ChangeEvent } from "react";
+// import { ChangeEvent } from "react";
 
 // Define the shape of the data specific to the Billing Info form section
 interface BillingInfoFormData {

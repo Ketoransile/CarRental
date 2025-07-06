@@ -187,7 +187,7 @@ export const About = () => {
         imageUrl={heroCar}
         appStoreImage={appStoreImage}
         googlePlayImage={googlePlayImage}
-        className="mb-20"
+        // className="mb-20"
       />
 
       {/* About Header */}

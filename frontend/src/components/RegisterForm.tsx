@@ -191,7 +191,8 @@ export const RegisterForm: React.FC = () => {
   const onSubmit = async () => {
     try {
       const values = watch();
-      const { data, error } = await authClient.signUp.email(
+      // const { data, error } = await authClient.signUp.email(
+      await authClient.signUp.email(
         {
           email: values.email,
           password: values.password,
@@ -199,10 +200,10 @@ export const RegisterForm: React.FC = () => {
           callbackURL: "/",
         },
         {
-          onRequest: (ctx) => {
+          onRequest: () => {
             // show loading
           },
-          onSuccess: async (ctx) => {
+          onSuccess: async () => {
             await fetchSession();
             addToast({
               title: "Successfully registered, redirecting...",

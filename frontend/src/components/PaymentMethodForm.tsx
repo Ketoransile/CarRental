@@ -1,7 +1,7 @@
-import React from "react";
+import React, { type ChangeEvent } from "react";
 // IMPORTANT: This import requires the '@heroui/react' package to be installed in your project.
 import { Input, RadioGroup, Radio } from "@heroui/react";
-import { ChangeEvent } from "react";
+// import { ChangeEvent } from "react";
 
 // Type definitions for Credit Card Information
 interface CreditCardInfo {

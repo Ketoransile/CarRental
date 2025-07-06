@@ -60,7 +60,7 @@
 //     </div>
 //   );
 // };
-import { Button, Form, Image, Input, Link } from "@heroui/react";
+import { Image, Link } from "@heroui/react";
 import loginImage from "../../assets/login.svg";
 import { FcGoogle } from "react-icons/fc";
 import { RegisterForm } from "../../components/RegisterForm";
