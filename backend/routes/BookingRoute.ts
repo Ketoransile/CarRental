@@ -7,9 +7,9 @@ import {
   getBookingById,
   // checkCarAvailability,
   getVehicleBookings,
-} from "../controller/BookingController";
-import { isAdmin } from "../middlewares/isAdmin";
-import { authenticatedUser } from "../middlewares/authenticatedUser";
+} from "../controller/BookingController.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
+import { authenticatedUser } from "../middlewares/authenticatedUser.js";
 
 const router = Router();
 

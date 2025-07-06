@@ -6,9 +6,9 @@ import {
   editSingleCar,
   getAllCars,
   // editSingleCar,
-} from "../controller/CarController";
-import { authenticatedUser } from "../middlewares/authenticatedUser";
-import { isAdmin } from "../middlewares/isAdmin";
+} from "../controller/CarController.js";
+import { authenticatedUser } from "../middlewares/authenticatedUser.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
 
 const route = Router();
 route.post("/create", isAdmin, createCar);
