@@ -3,16 +3,16 @@ import express from "express";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 // import { auth } from "utils/auth";
-import carRoute from "routes/CarRoute";
+import carRoute from "./routes/CarRoute";
 import cookieParser from "cookie-parser";
-import bookingRoute from "routes/BookingRoute";
+import bookingRoute from "./routes/BookingRoute";
 import helmet from "helmet";
-import authRoute from "routes/authRoute";
+import authRoute from "./routes/authRoute";
 import { authenticatedUser } from "./middlewares/authenticatedUser";
 import { AppError, errorHandler } from "./middlewares/errorHandler";
 import { connectDB } from "./config/db";
 import { isAdmin } from "./middlewares/isAdmin";
-import { auth } from "utils/auth";
+import { auth } from "./utils/auth";
 const app = express();
 const origins = [
   "http://localhost:3000",

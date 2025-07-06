@@ -10,8 +10,8 @@
     "allowImportingTsExtensions": true,
     "outDir": "dist",
     "lib": ["esnext"],
-    "types": ["node"],
-    "baseUrl": "./"
+    "types": ["node"]
+    // "baseUrl": "./"
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts"]
