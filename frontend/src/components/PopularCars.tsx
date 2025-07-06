@@ -36,7 +36,7 @@ import { Link } from "react-router-dom";
 
 export const PopularCars = () => {
   const { cars, loading, error, fetchCars } = useCarStore();
-
+  console.log("Cars from popular cars", cars);
   useEffect(() => {
     fetchCars();
   }, [fetchCars]);
@@ -67,7 +67,7 @@ export const PopularCars = () => {
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <LoadingSpinner size="lg" />
+        <LoadingSpinner size={32} />
       </div>
     );
 

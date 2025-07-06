@@ -13,13 +13,16 @@ import { AppError, errorHandler } from "./middlewares/errorHandler";
 import { connectDB } from "./config/db";
 import { isAdmin } from "./middlewares/isAdmin";
 const app = express();
-const origins = ["http://localhost:3000, https://drivezy-frontend.vercel.app"];
+const origins = [
+  "http://localhost:3000",
+  "https://drivezy-frontend.vercel.app",
+];
 const PORT = process.env.PORT || 5000;
 app.use(cookieParser());
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: origins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -39,9 +42,9 @@ app.get("/", (req, res) => {
 // app.all("*", (req, res, next) => {
 //   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 // });
-app.get("*", (req, res) => {
-  res.send("Hello World!");
-});
+// app.get("*", (req, res) => {
+//   res.send("Hello World!");
+// });
 app.use(errorHandler);
 
 const startServer = async () => {

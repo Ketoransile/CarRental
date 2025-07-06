@@ -20,7 +20,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes.tsx";
 import { UserBookingsLoader } from "./loaders/UserBokingsLoader.ts";
 import { MyBookings } from "./pages/MyBookings/MyBookings.tsx";
 // import { ContactUsPage } from "./pages/Contact/Contact.tsx";
-
+console.log("Import meta.env is ", import.meta.env);
 const router = createBrowserRouter([
   {
     path: "/",
