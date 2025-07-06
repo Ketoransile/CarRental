@@ -152,6 +152,7 @@ import { UserMenu } from "../UserMenu";
 export const Header = () => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
+  console.log("user from headear is ", user);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navLinks = [
