@@ -34,17 +34,10 @@ app.use(express.json());
 app.use("/api/v1/car", carRoute);
 app.use("/api/v1/booking", bookingRoute);
 app.use("/api/v1/auths", authRoute);
-
 app.get("/", (req, res) => {
-  console.log("HEllo World");
-  res.send("HEllo WOrld");
+  res.json({ status: "running", timestamp: new Date() });
 });
-// app.all("*", (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
-// });
-// app.get("*", (req, res) => {
-//   res.send("Hello World!");
-// });
+
 app.use(errorHandler);
 
 const startServer = async () => {

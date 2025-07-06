@@ -30,7 +30,7 @@ export const CarsPage = () => {
   if (loading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <LoadingSpinner size={32} />
+        <LoadingSpinner size={10} />
       </div>
     );
   }

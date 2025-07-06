@@ -39,7 +39,7 @@ export const Hero = () => {
 
         <motion.div variants={fadeIn}>
           <button
-            onClick={() => navigate("/search")}
+            onClick={() => navigate("/all-cars")}
             className="px-8 py-3 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Browse Cars
