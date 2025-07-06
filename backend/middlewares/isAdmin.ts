@@ -1,7 +1,7 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../utils/auth";
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "./errorHandler";
+import { AppError } from "./errorHandler.js";
 
 export const isAdmin = async (
   req: Request,

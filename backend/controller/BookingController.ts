@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express"; // Import NextFunction
-import { AppError } from "../middlewares/errorHandler";
-import { Booking } from "../models/Booking";
-import { Car } from "../models/Car";
-import { auth } from "../utils/auth";
+import { AppError } from "../middlewares/errorHandler.js";
+import { Booking } from "../models/Booking.js";
+import { Car } from "../models/Car.js";
+import { auth } from "../utils/auth.js";
 import { fromNodeHeaders } from "better-auth/node";
-import { connectDB } from "../config/db";
+import { connectDB } from "../config/db.js";
 import { ObjectId } from "mongodb";
 
 // export const createBooking = async (

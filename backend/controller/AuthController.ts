@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { connectDB } from "../config/db";
-import { auth } from "../utils/auth";
-import { AppError } from "../middlewares/errorHandler"; // 👈 Import AppError
+import { connectDB } from "../config/db.js";
+import { auth } from "../utils/auth.js";
+import { AppError } from "../middlewares/errorHandler.js"; // 👈 Import AppError
 
 export const loginUser = async (
   req: Request,

@@ -1,7 +1,7 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { NextFunction, Request, Response } from "express";
-import { auth } from "../utils/auth";
-import { AppError } from "./errorHandler";
+import { auth } from "../utils/auth.js";
+import { AppError } from "./errorHandler.js";
 
 declare global {
   namespace Express {
