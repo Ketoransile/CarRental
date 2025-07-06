@@ -1,133 +1,87 @@
-// import { useSearchParams } from "react-router-dom";
-// import { CarCard } from "../../components/CarCard";
-// import { CarsList } from "../../components/CarsList";
-// import type { ICar } from "../../types/car";
-// import { cars } from "../../utils/dummyCarDetails";
-// import { Tabs, Tab } from "@heroui/tabs";
-// import { useEffect } from "react";
-// import { useCarStore, type FCar } from "../../stores/useCarStore";
-// import { LoadingSpinner } from "../../components/LoadingSpinner";
-// export const CarsPage = () => {
-//   const [searchParams] = useSearchParams();
-//   const { cars, loading, error, fetchCars } = useCarStore();
-//   useEffect(() => {
-//     fetchCars();
-//   }, [fetchCars]);
-
-//   if (loading) return <LoadingSpinner />;
-//   if (error) return <p>Error: {error}</p>;
-
-//   const selectedMakes = searchParams.get("make")?.split(",") || [];
-//   const selectedTypes = searchParams.get("type")?.split(",") || [];
-//   const selectedTransmissions =
-//     searchParams.get("transmission")?.split(",") || [];
-//   const selectedFuelTypes = searchParams.get("fuelType")?.split(",") || [];
-
-//   const filterCars = (carsToFilter: FCar[]) => {
-//     return carsToFilter.filter((car) => {
-//       // Check if the car's make is in the selected makes list, or if no makes are selected
-//       const isMakeMatch =
-//         selectedMakes.length === 0 || selectedMakes.includes(car.make);
-
-//       // Check if the car's type is in the selected types list, or if no types are selected
-//       const isTypeMatch =
-//         selectedTypes.length === 0 || selectedTypes.includes(car.type);
-
-//       // Check if the car's transmission is in the selected transmissions list, or if no transmissions are selected
-//       const isTransmissionMatch =
-//         selectedTransmissions.length === 0 ||
-//         selectedTransmissions.includes(car.transmission);
-
-//       // Check if the car's fuel type is in the selected fuel types list, or if no fuel types are selected
-//       const isFuelTypeMatch =
-//         selectedFuelTypes.length === 0 ||
-//         (car.fuelType !== undefined &&
-//           selectedFuelTypes.includes(car.fuelType));
-
-//       // A car matches if it satisfies all active filter criteria
-//       return (
-//         isMakeMatch && isTypeMatch && isTransmissionMatch && isFuelTypeMatch
-//       );
-//     });
-//   };
-
-//   // Apply the filtering to the original car data
-//   const filteredCars = filterCars(cars);
-//   return <CarsList cars={filteredCars} />;
-// };
-// import { useEffect, useMemo } from "react";
-// import { useSearchParams } from "react-router-dom";
-// import { useCarStore, type FCar } from "../../stores/useCarStore";
-// import { CarsList } from "../../components/CarsList";
-// import { LoadingSpinner } from "../../components/LoadingSpinner";
-
-// export const CarsPage = () => {
-//   const [searchParams] = useSearchParams();
-//   const { cars, loading, error, fetchCars } = useCarStore();
-
-//   useEffect(() => {
-//     // fetch once per mount – the store keeps data cached
-//     fetchCars();
-//   }, [fetchCars]);
-
-//   /* --------- Derive active filters from the URL --------- */
-//   const selectedMakes = searchParams.get("make")?.split(",") ?? [];
-//   const selectedTypes = searchParams.get("type")?.split(",") ?? [];
-//   const selectedTransmissions =
-//     searchParams.get("transmission")?.split(",") ?? [];
-//   const selectedFuelTypes = searchParams.get("fuelType")?.split(",") ?? [];
-
-//   /* --------- Memoised filtering --------- */
-//   const filteredCars = useMemo(() => {
-//     const match = (arr: string[], value?: string) =>
-//       arr.length === 0 || (value && arr.includes(value));
-
-//     return cars.filter(
-//       (c: FCar) =>
-//         match(selectedMakes, c.make) &&
-//         match(selectedTypes, c.type) &&
-//         match(selectedTransmissions, c.transmission) &&
-//         match(selectedFuelTypes, c.fuelType)
-//     );
-//   }, [
-//     cars,
-//     selectedMakes,
-//     selectedTypes,
-//     selectedTransmissions,
-//     selectedFuelTypes,
-//   ]);
-
-//   /* --------- UI states --------- */
-//   if (loading) return <LoadingSpinner />;
-//   if (error)
-//     return <p className="p-8 text-center text-red-600">Error: {error}</p>;
-
-//   return <CarsList cars={filteredCars} />;
-// };
-// pages/CarsPage.tsx
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useCarStore } from "../../stores/useCarStore";
 import { CarsList } from "../../components/CarsList";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { FiAlertCircle, FiRefreshCw } from "react-icons/fi";
 
 export const CarsPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { cars, loading, error, fetchCars } = useCarStore();
 
-  /* 🔁 refetch every time the URL’s filters change */
   useEffect(() => {
     fetchCars({
       make: searchParams.get("make") ?? undefined,
       type: searchParams.get("type") ?? undefined,
       transmission: searchParams.get("transmission") ?? undefined,
       fuelType: searchParams.get("fuelType") ?? undefined,
-      // page / limit later…
     });
   }, [searchParams, fetchCars]);
 
-  if (loading) return <LoadingSpinner />;
-  if (error)
-    return <p className="p-8 text-center text-red-600">Error: {error}</p>;
-  return <CarsList cars={cars} />;
+  const retry = useCallback(() => {
+    fetchCars({
+      make: searchParams.get("make") ?? undefined,
+      type: searchParams.get("type") ?? undefined,
+      transmission: searchParams.get("transmission") ?? undefined,
+      fuelType: searchParams.get("fuelType") ?? undefined,
+    });
+  }, [fetchCars, searchParams]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <LoadingSpinner size={32} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-xl bg-white p-8 text-center">
+        <div className="rounded-full bg-red-100 p-4">
+          <FiAlertCircle size={32} className="text-red-600" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900">
+          Error loading cars
+        </h3>
+        <p className="text-gray-600">{error}</p>
+        <button
+          onClick={retry}
+          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700"
+        >
+          <FiRefreshCw size={18} />
+          Try again
+        </button>
+      </div>
+    );
+  }
+
+  if (cars.length === 0) {
+    return (
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-xl bg-white p-8 text-center">
+        <div className="rounded-full bg-gray-100 p-4">
+          <FiAlertCircle size={32} className="text-gray-600" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900">No cars found</h3>
+        <p className="text-gray-600">
+          Try adjusting your filters to see more results
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-900">
+          Available Cars ({cars.length})
+        </h2>
+      </div>
+      <CarsList
+        cars={cars}
+        setSearchParams={setSearchParams}
+        searchParams={searchParams}
+      />
+    </div>
+  );
 };

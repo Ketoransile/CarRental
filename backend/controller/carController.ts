@@ -149,35 +149,92 @@ export const editSingleCar = async (req: Request, res: Response) => {
   }
 };
 
+// export const getAllCars = async (req: Request, res: Response) => {
+//   try {
+//     // await connectDB();
+//     // console.log("req.headers from getAllCars is", req.headers);
+//     // console.log("💡 Before calling Car.find()");
+//     const cars = await Car.find();
+//     // console.log("💡 After calling Car.find()");
+//     if (!cars || cars.length === 0) {
+//       res.status(404).json({
+//         success: false,
+//         message: "No car was found in the dataabse",
+//         data: null,
+//       });
+//       return;
+//     }
+//     // console.log("Cars from get al lcars is ", cars);
+//     res.status(200).json({
+//       success: true,
+//       message: "Cars were succesfully fetched",
+//       data: cars,
+//     });
+//     return;
+//   } catch (error) {
+//     console.error("Error whiel getting all cars", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal Server error while getting all cars",
+//       data: null,
+//     });
+//     return;
+//   }
+// };
 export const getAllCars = async (req: Request, res: Response) => {
   try {
-    // await connectDB();
-    // console.log("req.headers from getAllCars is", req.headers);
-    // console.log("💡 Before calling Car.find()");
-    const cars = await Car.find();
-    // console.log("💡 After calling Car.find()");
-    if (!cars || cars.length === 0) {
-      res.status(404).json({
+    /* -------------------------------------------------- */
+    /* 1. Read query params                               */
+    /* -------------------------------------------------- */
+    const {
+      make,
+      type,
+      transmission,
+      fuelType,
+      page = "1",
+      limit = "20",
+    } = req.query as Record<string, string>;
+
+    /* -------------------------------------------------- */
+    /* 2. Build dynamic Mongo filter                      */
+    /* -------------------------------------------------- */
+    const filters: Record<string, any> = {};
+    if (make) filters.make = { $in: make.split(",") };
+    if (type) filters.type = { $in: type.split(",") };
+    if (transmission) filters.transmission = { $in: transmission.split(",") };
+    if (fuelType) filters.fuelType = { $in: fuelType.split(",") };
+
+    /* -------------------------------------------------- */
+    /* 3. Pagination                                      */
+    /* -------------------------------------------------- */
+    const skip = (+page - 1) * +limit;
+    const cars = await Car.find(filters).skip(skip).limit(+limit).lean();
+    const total = await Car.countDocuments(filters);
+
+    /* 4. No matches → 404 with helpful message ---------- */
+    if (cars.length === 0) {
+      return res.status(404).json({
         success: false,
-        message: "No car was found in the dataabse",
+        message: "No cars matched the selected filters.",
         data: null,
       });
-      return;
     }
-    // console.log("Cars from get al lcars is ", cars);
-    res.status(200).json({
+
+    /* 5. Success --------------------------------------- */
+    return res.status(200).json({
       success: true,
-      message: "Cars were succesfully fetched",
+      message: "Cars fetched successfully.",
       data: cars,
+      total,
+      page: +page,
+      limit: +limit,
     });
-    return;
-  } catch (error) {
-    console.error("Error whiel getting all cars", error);
-    res.status(500).json({
+  } catch (err) {
+    console.error("❌ getAllCars error:", err);
+    return res.status(500).json({
       success: false,
-      message: "Internal Server error while getting all cars",
+      message: "Internal server error while fetching cars.",
       data: null,
     });
-    return;
   }
 };
