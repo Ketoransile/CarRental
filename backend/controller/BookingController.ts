@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express"; // Import NextFunction
 import { AppError } from "../middlewares/errorHandler";
 import { Booking } from "../models/Booking";
-import { Car } from "../models/car";
+import { Car } from "../models/Car";
 import { auth } from "../utils/auth";
 import { fromNodeHeaders } from "better-auth/node";
 import { connectDB } from "../config/db";
@@ -222,7 +222,7 @@ export const createBooking = async (
     }
 
     // 3. Vehicle existence and general availability check
-    const vehicle = await Car.findById(vehicleId); // Using Car model name as per recent discussion
+    const vehicle = await (Car as any).findById(vehicleId); // Cast Car to any to resolve callable issue if Car is a union type
     if (!vehicle) {
       throw new AppError("Vehicle not found with the provided ID.", 404);
     }

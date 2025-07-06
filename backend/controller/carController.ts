@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { connectDB } from "../config/db";
-import { Car } from "../models/car";
+import { Car } from "../models/Car";
 
 export const createCar = async (req: Request, res: Response) => {
   try {

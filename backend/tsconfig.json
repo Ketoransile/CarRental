@@ -6,13 +6,13 @@
     "target": "ESNext",
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
+    // "noEmit": true,
+    // "allowImportingTsExtensions": true,
     "outDir": "dist",
     "lib": ["esnext"],
     "types": ["node"],
     "baseUrl": "./"
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts", "bin/*.ts"]
+  "include": ["**/*.ts"]
 }
