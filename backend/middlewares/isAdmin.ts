@@ -1,5 +1,5 @@
 import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "../utils/auth";
+import { auth } from "../utils/auth.js";
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "./errorHandler.js";
 
