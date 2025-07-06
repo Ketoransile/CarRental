@@ -213,15 +213,16 @@ export const getAllCars = async (req: Request, res: Response) => {
 
     /* 4. No matches → 404 with helpful message ---------- */
     if (cars.length === 0) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: "No cars matched the selected filters.",
         data: null,
       });
+      return;
     }
 
     /* 5. Success --------------------------------------- */
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Cars fetched successfully.",
       data: cars,
@@ -229,12 +230,14 @@ export const getAllCars = async (req: Request, res: Response) => {
       page: +page,
       limit: +limit,
     });
+    return;
   } catch (err) {
     console.error("❌ getAllCars error:", err);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Internal server error while fetching cars.",
       data: null,
     });
+    return;
   }
 };

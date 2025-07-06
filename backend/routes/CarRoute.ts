@@ -6,7 +6,7 @@ import {
   editSingleCar,
   getAllCars,
   // editSingleCar,
-} from "../controller/carController";
+} from "../controller/CarController";
 import { authenticatedUser } from "../middlewares/authenticatedUser";
 import { isAdmin } from "../middlewares/isAdmin";
 

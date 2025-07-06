@@ -428,72 +428,72 @@ export const getVehicleBookings = async (
     next(error);
   }
 };
-export const checkCarAvailability = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { vehicleId } = req.params;
-    const { pickUpDate, dropoffDate } = req.query;
+// export const checkCarAvailability = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { vehicleId } = req.params;
+//     const { pickUpDate, dropoffDate } = req.query;
 
-    if (!vehicleId) {
-      throw new AppError("Missing car ID", 400);
-    }
+//     if (!vehicleId) {
+//       throw new AppError("Missing car ID", 400);
+//     }
 
-    const car = await Car.findOne({ _id: vehicleId });
-    if (!car) {
-      throw new AppError("No car was found with that ID", 404);
-    }
+//     const car = await Car.findOne({ _id: vehicleId });
+//     if (!car) {
+//       throw new AppError("No car was found with that ID", 404);
+//     }
 
-    if (!car.available) {
-      res.status(200).json({
-        success: true,
-        message: `Car with the ID ${vehicleId} is currently not generally available.`,
-        data: { vehicleId: car._id, isAvailable: false },
-      });
-      return;
-    }
+//     if (!car.available) {
+//       res.status(200).json({
+//         success: true,
+//         message: `Car with the ID ${vehicleId} is currently not generally available.`,
+//         data: { vehicleId: car._id, isAvailable: false },
+//       });
+//       return;
+//     }
 
-    let isDateAvailable = true;
-    let message = `Car with the ID ${vehicleId} is available.`;
+//     let isDateAvailable = true;
+//     let message = `Car with the ID ${vehicleId} is available.`;
 
-    if (pickUpDate && dropoffDate) {
-      const requestedPickUp = new Date(pickUpDate as string);
-      const requestedDropoff = new Date(dropoffDate as string);
+//     if (pickUpDate && dropoffDate) {
+//       const requestedPickUp = new Date(pickUpDate as string);
+//       const requestedDropoff = new Date(dropoffDate as string);
 
-      if (requestedPickUp >= requestedDropoff) {
-        throw new AppError("Drop-off date must be after pick-up date", 400);
-      }
+//       if (requestedPickUp >= requestedDropoff) {
+//         throw new AppError("Drop-off date must be after pick-up date", 400);
+//       }
 
-      const overlappingBookings = await Booking.find({
-        vehicleId: vehicleId,
-        $or: [
-          {
-            pickUpDate: { $lt: requestedDropoff },
-            dropoffDate: { $gt: requestedPickUp },
-          },
-        ],
-      });
+//       const overlappingBookings = await Booking.find({
+//         vehicleId: vehicleId,
+//         $or: [
+//           {
+//             pickUpDate: { $lt: requestedDropoff },
+//             dropoffDate: { $gt: requestedPickUp },
+//           },
+//         ],
+//       });
 
-      if (overlappingBookings.length > 0) {
-        isDateAvailable = false;
-        message = `Car with the ID ${vehicleId} is booked for some part of the requested dates (${pickUpDate} to ${dropoffDate}).`;
-      }
-    } else {
-      message = `Car with the ID ${vehicleId} is generally available (no specific dates checked).`;
-    }
+//       if (overlappingBookings.length > 0) {
+//         isDateAvailable = false;
+//         message = `Car with the ID ${vehicleId} is booked for some part of the requested dates (${pickUpDate} to ${dropoffDate}).`;
+//       }
+//     } else {
+//       message = `Car with the ID ${vehicleId} is generally available (no specific dates checked).`;
+//     }
 
-    res.status(200).json({
-      success: true,
-      message: message,
-      data: {
-        vehicleId: car._id,
-        isAvailable: isDateAvailable,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       message: message,
+//       data: {
+//         vehicleId: car._id,
+//         isAvailable: isDateAvailable,
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 // export const cancelBooking = async () => {};

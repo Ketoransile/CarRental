@@ -5,7 +5,7 @@ import {
   getUserBookings,
   // cancelBooking,
   getBookingById,
-  checkCarAvailability,
+  // checkCarAvailability,
   getVehicleBookings,
 } from "../controller/BookingController";
 import { isAdmin } from "../middlewares/isAdmin";
@@ -24,6 +24,6 @@ router.get("/vehicle/:vehicleId", authenticatedUser, getVehicleBookings);
 
 // router.delete("/:bookingId", cancelBooking);
 
-router.get("/availability/car/:carId", checkCarAvailability);
+// router.get("/availability/car/:carId", checkCarAvailability);
 
 export default router;
