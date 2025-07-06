@@ -26,6 +26,7 @@ app.use(
     origin: origins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
   })
 );
 app.all("/api/auth/*splat", toNodeHandler(auth));
