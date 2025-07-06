@@ -27,7 +27,7 @@ app.use(
     credentials: true,
   })
 );
-app.all("/api/auth/{*any}", toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
 // Routes
@@ -35,7 +35,7 @@ app.use("/api/v1/car", carRoute);
 app.use("/api/v1/booking", bookingRoute);
 app.use("/api/v1/auths", authRoute);
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
   console.log("HEllo World");
   res.send("HEllo WOrld");
 });

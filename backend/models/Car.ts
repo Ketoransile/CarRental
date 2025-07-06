@@ -1,9 +1,9 @@
-import mongoose, { Schema, model, Document, models } from "mongoose";
+import mongoose, { Schema, model, Document } from "mongoose";
 
-// 1. Define TypeScript interface for the document
+// 1. Define TypeScript interface
 export interface ICar extends Document {
   make: string;
-  carModel: string; // Renamed from 'model' to 'carModel'
+  carModel: string; // Renamed from 'model'
   year: number;
   type: string;
   transmission: string;
@@ -19,10 +19,10 @@ export interface ICar extends Document {
   description?: string;
 }
 
-// 2. Define the schema with types
+// 2. Define the schema
 const carSchema = new Schema<ICar>({
   make: { type: String, required: true },
-  carModel: { type: String, required: true }, // Renamed from 'model' to 'carModel'
+  carModel: { type: String, required: true },
   year: { type: Number, required: true },
   type: { type: String, required: true },
   transmission: { type: String, required: true },
@@ -38,6 +38,7 @@ const carSchema = new Schema<ICar>({
   description: { type: String },
 });
 
-// 3. Export the model with proper typing
+// 3. Export the model using mongoose.models
 export const Car =
-  (models.Car as mongoose.Model<ICar>) || model<ICar>("Car", carSchema);
+  (mongoose.models.Car as mongoose.Model<ICar>) ||
+  model<ICar>("Car", carSchema);
