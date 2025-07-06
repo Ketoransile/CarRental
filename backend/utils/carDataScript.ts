@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { connectDB } from "../config/db";
-import { Car } from "../models/Car";
+import { connectDB } from "../config/db.js";
+import { Car } from "../models/Car.js";
 
 const cars = [
   {

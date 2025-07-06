@@ -3,8 +3,8 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 // import { client } from "../config/db";
 import { admin as adminPlugin } from "better-auth/plugins";
-import { ac, admin, customer } from "../utils/permission";
-import { connectDB } from "../config/db";
+import { ac, admin, customer } from "../utils/permission.js";
+import { connectDB } from "../config/db.js";
 
 const client = await connectDB();
 export const auth = betterAuth({
