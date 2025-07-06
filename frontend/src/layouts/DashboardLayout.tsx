@@ -27,8 +27,8 @@ export const DashboardLayout = () => {
         {/* --- Main content --- */}
         <main className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
           <Outlet
-            searchParams={searchParams}
-            setSearchParams={setSearchParams}
+          // searchParams={searchParams}
+          // setSearchParams={setSearchParams}
           />
         </main>
       </div>

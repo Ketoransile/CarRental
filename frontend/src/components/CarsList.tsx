@@ -1,6 +1,6 @@
 import type { FCar } from "../stores/useCarStore";
 import { CarCard } from "./CarCard";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 
 import type { SetURLSearchParams } from "react-router-dom"; // Import necessary types
 

@@ -1,5 +1,5 @@
 import { CheckboxGroup, Checkbox } from "@heroui/react";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import { useCallback, useEffect, useState } from "react";
 
