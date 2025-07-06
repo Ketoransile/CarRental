@@ -3,6 +3,7 @@ import { useAuthStore } from "../stores/authStore";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 const ProtectedRoutes = () => {
   const { user, isLoading } = useAuthStore();
+  console.log("user from protected route is ", user);
   if (isLoading) {
     return <LoadingSpinner size={20} />;
   }
