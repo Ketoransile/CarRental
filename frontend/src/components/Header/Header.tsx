@@ -4,10 +4,18 @@ import { FaBars } from "react-icons/fa"; // mobile “hamburger” icon
 import { LuX } from "react-icons/lu"; // close icon
 import { useAuthStore } from "../../stores/authStore";
 import { UserMenu } from "../UserMenu";
+import { authClient } from "../../lib/auth-client";
 
 export const Header = () => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch, //refetch the session
+  } = authClient.useSession();
+  console.log("session from header", session);
   const [mobileOpen, setMobileOpen] = useState(false);
   console.log("user from headr is", user);
   const navLinks = [
