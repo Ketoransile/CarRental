@@ -99,13 +99,6 @@ export const Header = () => {
             {user ? (
               <>
                 <NavLink
-                  to="/profile"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded px-2 py-1 text-neutral-800 hover:bg-neutral-100"
-                >
-                  Profile
-                </NavLink>
-                <NavLink
                   to={`/my-bookings/${user.id}`}
                   onClick={() => setMobileOpen(false)}
                   className="rounded px-2 py-1 text-neutral-800 hover:bg-neutral-100"

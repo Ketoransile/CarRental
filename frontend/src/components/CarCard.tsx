@@ -8,7 +8,7 @@ import { GiGearStickPattern } from "react-icons/gi";
 import type { FCar } from "../stores/useCarStore";
 export const CarCard = ({ car }: { car: FCar }) => {
   return (
-    <div className="relative group flex flex-col gap-2  rounded-xl py-4 transition-shadow shadow-xl drop-shadow-blue-600">
+    <div className="w-full relative group flex flex-col gap-2  rounded-xl py-4 transition-shadow shadow-xl drop-shadow-blue-600">
       {car.available && (
         <div className="absolute top-0  bg-blue-100 text-blue-600 font-bold px-4 text-xs rounded-full py-1 ml-8">
           {car.available && "Available Now"}

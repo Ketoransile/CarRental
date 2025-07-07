@@ -181,7 +181,7 @@ export const About = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center">
+    <div className="w-full min-h-screen flex flex-col items-center py-10">
       {/* Hero Section */}
       <PerfectCarSection
         imageUrl={heroCar}
@@ -195,7 +195,7 @@ export const About = () => {
         initial="hidden"
         animate="visible"
         variants={fadeIn}
-        className="w-full max-w-7xl px-6 mb-20 text-center"
+        className="w-full max-w-7xl px-6 mb-20 text-center pt-10"
       >
         <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent mb-4">
           About Us
