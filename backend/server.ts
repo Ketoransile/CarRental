@@ -17,6 +17,7 @@ const app = express();
 const origins = [
   "http://localhost:3000",
   "https://drivezy-frontend.vercel.app",
+  "https://drivezy-car-rental.vercel.app",
 ];
 const PORT = process.env.PORT || 5000;
 app.use(cookieParser());

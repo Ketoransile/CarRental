@@ -200,6 +200,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
     "https://drivezy-frontend.vercel.app",
+    "https://drivezy-car-rental.vercel.app",
   ],
   socialProviders: {
     // github: {
