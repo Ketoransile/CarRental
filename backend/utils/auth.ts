@@ -72,6 +72,7 @@ import { ac, admin, customer } from "../utils/permission.js";
 import { connectDB } from "../config/db.js";
 
 const client = await connectDB();
+const isLocalhost = process.env.NODE_ENV !== "production";
 export const auth = betterAuth({
   database: mongodbAdapter(client.db()),
   user: {
@@ -108,8 +109,8 @@ export const auth = betterAuth({
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
     cookieSettings: {
-      sameSite: "none", // 👈 important
-      secure: true,
+      sameSite: isLocalhost ? "lax" : "none",
+      secure: !isLocalhost ? true : false,
     },
   },
   trustedOrigins: [
