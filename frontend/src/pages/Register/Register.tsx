@@ -64,6 +64,7 @@ import { Image, Link } from "@heroui/react";
 import loginImage from "../../assets/login.svg";
 import { FcGoogle } from "react-icons/fc";
 import { RegisterForm } from "../../components/RegisterForm";
+import { GoogleSignInButton } from "../../components/GoogleSignInButton";
 
 export const Register = () => {
   return (
@@ -84,7 +85,7 @@ export const Register = () => {
           <div className="flex-1 border-t border-neutral-300"></div>
         </div>
 
-        <Link
+        {/* <Link
           href="/"
           className="bg-white text-gray-700 flex items-center justify-center gap-2 py-2 sm:py-3 w-full max-w-xs sm:max-w-sm border border-neutral-300 rounded-xl hover:bg-gray-50 transition-colors duration-200"
         >
@@ -92,8 +93,8 @@ export const Register = () => {
           <p className="font-medium text-sm sm:text-base">
             Sign up with Google
           </p>
-        </Link>
-
+        </Link> */}
+        <GoogleSignInButton />
         <div className="flex items-center gap-2 mt-4 sm:mt-6">
           <p className="text-gray-600 text-sm sm:text-base">
             Do you have an account already?
