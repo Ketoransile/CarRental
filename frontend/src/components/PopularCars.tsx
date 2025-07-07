@@ -151,7 +151,7 @@ export const PopularCars = () => {
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <LoadingSpinner size={32} />
+        <LoadingSpinner size={14} />
       </div>
     );
 
