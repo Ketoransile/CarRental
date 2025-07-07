@@ -106,7 +106,11 @@ export const auth = betterAuth({
     enabled: true,
   },
   advanced: {
-    useSecureCookies: true,
+    useSecureCookies: process.env.NODE_ENV === "production",
+    cookieSettings: {
+      sameSite: "none", // 👈 important
+      secure: true,
+    },
   },
   trustedOrigins: [
     "http://localhost:3000",

@@ -8,11 +8,11 @@ import { authClient } from "../../lib/auth-client";
 
 export const Header = () => {
   const location = useLocation();
-  const { user, logout } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
 
   // console.log("session from header", session);
   const [mobileOpen, setMobileOpen] = useState(false);
-  console.log("user from headr is", user);
+  // console.log("user from headr is", user);
   const navLinks = [
     { title: "Home", href: "/" },
     { title: "Vehicles", href: "/all-cars" },

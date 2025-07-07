@@ -26,6 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const { data: session, error } = await authClient.getSession();
+      console.log("Session from the authStore is now", session);
 
       if (error) {
         set({ user: null, error: error.message });

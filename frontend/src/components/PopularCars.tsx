@@ -117,7 +117,7 @@ import { Link } from "react-router-dom";
 
 export const PopularCars = () => {
   const { cars, loading, error, fetchCars } = useCarStore();
-  console.log("Cars from popular cars", cars);
+  // console.log("Cars from popular cars", cars);
   useEffect(() => {
     fetchCars();
   }, [fetchCars]);
