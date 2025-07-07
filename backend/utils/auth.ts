@@ -105,6 +105,9 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  advanced: {
+    useSecureCookies: true,
+  },
   trustedOrigins: [
     "http://localhost:3000",
     "https://drivezy-frontend.vercel.app",
