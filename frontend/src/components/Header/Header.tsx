@@ -8,23 +8,9 @@ import { authClient } from "../../lib/auth-client";
 
 export const Header = () => {
   const location = useLocation();
-  const { user, logout, setUser } = useAuthStore();
-  const {
-    data: session,
-    isPending, //loading state
-    error, //error object
-    refetch, //refetch the session
-  } = authClient.useSession();
-  useEffect(() => {
-    if (session?.user) {
-      setUser({
-        id: session.user.id,
-        email: session.user.email,
-        name: session.user.name || undefined,
-      });
-    }
-  }, [session, setUser]);
-  console.log("session from header", session);
+  const { user, logout } = useAuthStore();
+
+  // console.log("session from header", session);
   const [mobileOpen, setMobileOpen] = useState(false);
   console.log("user from headr is", user);
   const navLinks = [
