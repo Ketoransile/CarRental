@@ -203,10 +203,11 @@ export const auth = betterAuth({
     "https://drivezy-car-rental.vercel.app",
   ],
   socialProviders: {
-    // github: {
-    //   clientId: process.env.GITHUB_CLIENT_ID as string,
-    //   clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    // },
+    google: {
+      prompt: "select_account",
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
   },
   plugins: [
     adminPlugin({
