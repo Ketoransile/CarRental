@@ -316,7 +316,7 @@ export const CarRentalForm = ({
           </div>
           <h2 className="text-xs text-neutral-400">Step 1 of 4</h2>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <Controller
             name="fullName"
             control={control}
@@ -392,7 +392,7 @@ export const CarRentalForm = ({
             <span className="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
             Pick-Up
           </div>
-          <div className="w-full grid grid-cols-2 gap-4">
+          <div className="w-full grid md:grid-cols-2 gap-4">
             <Controller
               name="pickUpLocation"
               control={control}
@@ -451,7 +451,7 @@ export const CarRentalForm = ({
             <span className="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>
             Drop-Off
           </div>
-          <div className="w-full grid grid-cols-2 gap-4">
+          <div className="w-full grid md:grid-cols-2 gap-4">
             <Controller
               name="dropOffLocation"
               control={control}
