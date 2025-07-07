@@ -9,6 +9,7 @@ import { authClient } from "../../lib/auth-client";
 export const Header = () => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   // console.log("session from header", session);
   const [mobileOpen, setMobileOpen] = useState(false);
