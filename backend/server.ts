@@ -13,15 +13,37 @@ import { AppError, errorHandler } from "./middlewares/errorHandler.js";
 import { connectDB } from "./config/db.js";
 import { isAdmin } from "./middlewares/isAdmin.js";
 import { auth } from "./utils/auth.js";
+import { rateLimit } from "express-rate-limit";
 const app = express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-8", // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  // store: ... , // Redis, Memcached, etc. See below.
+});
 const origins = [
   "http://localhost:3000",
   "https://drivezy-frontend.vercel.app",
   "https://drivezy-car-rental.vercel.app",
 ];
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Apply the rate limiting middleware to all requests.
+app.use(limiter);
 app.use(cookieParser());
 app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        scriptSrc: ["'self'", "https:", "'unsafe-inline'"],
+        objectSrc: ["'none'"],
+      },
+    },
+  })
+);
+
 app.use(
   cors({
     origin: origins,
