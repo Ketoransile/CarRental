@@ -7,7 +7,6 @@ import carRoute from "./routes/CarRoute.js";
 import cookieParser from "cookie-parser";
 import bookingRoute from "./routes/BookingRoute.js";
 import helmet from "helmet";
-import authRoute from "./routes/authRoute.js";
 import { authenticatedUser } from "./middlewares/authenticatedUser.js";
 import { AppError, errorHandler } from "./middlewares/errorHandler.js";
 import { connectDB } from "./config/db.js";
@@ -58,7 +57,7 @@ app.use(express.json());
 // Routes
 app.use("/api/v1/car", carRoute);
 app.use("/api/v1/booking", bookingRoute);
-app.use("/api/v1/auths", authRoute);
+// app.use("/api/v1/auths", authRoute);
 app.get("/", (req, res) => {
   res.json({ status: "running", timestamp: new Date() });
 });
