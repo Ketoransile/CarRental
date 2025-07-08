@@ -12,7 +12,7 @@ export const validateRequest = (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json({
+    res.status(422).json({
       // Added return here for consistency
       success: false,
       message: "Validation failed",
@@ -33,6 +33,7 @@ export const validateRequest = (
         };
       }),
     });
+    return;
   }
 
   // No validation errors — proceed to next middleware or controller
