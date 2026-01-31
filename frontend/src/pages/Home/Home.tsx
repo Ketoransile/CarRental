@@ -4,10 +4,10 @@ import { PopularCars } from "../../components/PopularCars";
 
 export const Home = () => {
   return (
-    <div className="relative min-h-screen flex flex-col gap-10  rounded-2xl  items-start justify-start pt-10 ">
+    <main className="min-h-screen w-full flex flex-col items-center overflow-x-hidden">
       <Hero />
       <PopularCars />
       {/* <RecommendedCars /> */}
-    </div>
+    </main>
   );
 };

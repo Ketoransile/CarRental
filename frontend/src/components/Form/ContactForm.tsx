@@ -118,6 +118,7 @@ import { useActionState } from "react";
 import { submitMessage } from "../../actions/contactFormAction";
 import type { ActionResponse } from "../../types/contactFormType";
 import { Button } from "@heroui/react";
+import { FaPaperPlane } from "react-icons/fa";
 
 const initialState: ActionResponse = { success: false, message: "" };
 
@@ -130,104 +131,99 @@ export function ContactForm() {
   return (
     <form
       action={action}
-      className="w-full max-w-xl rounded-lg bg-white p-6 shadow-md sm:p-8"
+      className="w-full bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100/50 relative z-10"
     >
-      {/* ---------- headline ---------- */}
-      <h2 className="mb-6 text-2xl font-bold text-gray-800">
-        We’d love to hear from you.
-        <br />
-        <span className="text-blue-600">Let’s get in touch.</span>
-      </h2>
-
-      {/* ---------- FULL NAME ---------- */}
-      <div className="mb-5 flex flex-col gap-1">
-        <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-          Full Name
-        </label>
-        <input
-          id="fullName"
-          name="fullName"
-          type="text"
-          required
-          placeholder="John Doe"
-          defaultValue={state.inputs?.fullName}
-          className="rounded-md border border-gray-300 p-3 text-base text-gray-800
-                     focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {state?.errors?.fullName && (
-          <p className="text-sm text-red-500">{state.errors.fullName[0]}</p>
-        )}
+      <div className="mb-8">
+        <h3 className="text-xl font-bold text-gray-900">Send us a Message</h3>
+        <p className="text-sm text-gray-500 mt-1">We'll get back to you within 24 hours.</p>
       </div>
 
-      {/* ---------- EMAIL ---------- */}
-      <div className="mb-5 flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium text-gray-700">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          placeholder="you@example.com"
-          defaultValue={state.inputs?.email}
-          className="rounded-md border border-gray-300 p-3 text-base text-gray-800
-                     focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {state?.errors?.email && (
-          <p className="text-sm text-red-500">{state.errors.email[0]}</p>
-        )}
-      </div>
+      <div className="space-y-5">
+        <div className="grid md:grid-cols-2 gap-5">
+          <div className="flex flex-col gap-1.5 hover:group">
+            <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 ml-1">
+              Full Name
+            </label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              required
+              placeholder="John Doe"
+              defaultValue={state.inputs?.fullName}
+              className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 transition-all 
+                         focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:outline-none placeholder:text-gray-400"
+            />
+            {state?.errors?.fullName && (
+              <p className="text-xs text-red-500 font-medium ml-1">{state.errors.fullName[0]}</p>
+            )}
+          </div>
 
-      {/* ---------- PHONE ---------- */}
-      <div className="mb-5 flex flex-col gap-1">
-        <label
-          htmlFor="phoneNumber"
-          className="text-sm font-medium text-gray-700"
-        >
-          Phone Number
-        </label>
-        <input
-          id="phoneNumber"
-          name="phoneNumber"
-          type="tel"
-          placeholder="(123) 456‑7890"
-          defaultValue={state.inputs?.phoneNumber}
-          className="rounded-md border border-gray-300 p-3 text-base text-gray-800
-                     focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {state?.errors?.phoneNumber && (
-          <p className="text-sm text-red-500">{state.errors.phoneNumber[0]}</p>
-        )}
-      </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-700 ml-1">
+              Phone Number
+            </label>
+            <input
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              placeholder="(123) 456-7890"
+              defaultValue={state.inputs?.phoneNumber}
+              className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 transition-all 
+                         focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:outline-none placeholder:text-gray-400"
+            />
+            {state?.errors?.phoneNumber && (
+              <p className="text-xs text-red-500 font-medium ml-1">{state.errors.phoneNumber[0]}</p>
+            )}
+          </div>
+        </div>
 
-      {/* ---------- MESSAGE ---------- */}
-      <div className="mb-6 flex flex-col gap-1">
-        <label htmlFor="message" className="text-sm font-medium text-gray-700">
-          Your Message
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          required
-          placeholder="Tell us about your rental needs, preferred car type, or any special requests."
-          defaultValue={state.inputs?.message}
-          className="min-h-[120px] resize-y rounded-md border border-gray-300 p-3 text-base text-gray-800
-                     focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {state?.errors?.message && (
-          <p className="text-sm text-red-500">{state.errors.message[0]}</p>
-        )}
-      </div>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="email" className="text-sm font-semibold text-gray-700 ml-1">
+            Email Address
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            placeholder="you@company.com"
+            defaultValue={state.inputs?.email}
+            className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 transition-all 
+                         focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:outline-none placeholder:text-gray-400"
+          />
+          {state?.errors?.email && (
+            <p className="text-xs text-red-500 font-medium ml-1">{state.errors.email[0]}</p>
+          )}
+        </div>
 
-      {/* ---------- SUBMIT ---------- */}
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          className="w-full rounded-md bg-blue-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto"
-        >
-          {isPending ? "Loading…" : "Submit"}
-        </Button>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="message" className="text-sm font-semibold text-gray-700 ml-1">
+            How can we help?
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            placeholder="Tell us about your rental needs or questions..."
+            defaultValue={state.inputs?.message}
+            className="w-full min-h-[140px] resize-y rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 transition-all 
+                         focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:outline-none placeholder:text-gray-400"
+          />
+          {state?.errors?.message && (
+            <p className="text-xs text-red-500 font-medium ml-1">{state.errors.message[0]}</p>
+          )}
+        </div>
+
+        <div className="pt-2">
+          <Button
+            type="submit"
+            isLoading={isPending}
+            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-all hover:shadow-blue-500/40 hover:scale-[1.01] active:scale-[0.99]"
+          >
+            {isPending ? "Sending Message..." : <span className="flex items-center gap-2">Send Message <FaPaperPlane size={12} /></span>}
+          </Button>
+        </div>
       </div>
     </form>
   );

@@ -108,9 +108,9 @@
 // src/components/PopularCars.tsx
 
 import { useEffect } from "react";
-import { motion, cubicBezier } from "framer-motion"; // <-- Import cubicBezier here
+import { motion, cubicBezier } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import { useCarStore, type FCar } from "../stores/useCarStore";
-import { LoadingSpinner } from "./LoadingSpinner";
 import { CarCard } from "./CarCard";
 import { Button } from "@heroui/react";
 import { Link } from "react-router-dom";
@@ -150,9 +150,9 @@ export const PopularCars = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center py-20">
-        <LoadingSpinner size={14} />
-      </div>
+      <section className="w-full py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50 min-h-[400px] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600" />
+      </section>
     );
 
   if (error)

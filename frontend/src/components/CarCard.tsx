@@ -1,70 +1,89 @@
 import { Button, Image } from "@heroui/react";
-import { Link } from "react-router";
-// import type { ICar } from "../types/car";
-import { FaUserFriends } from "react-icons/fa"; // Seat: Group of users
-import { LuGauge } from "react-icons/lu"; // Mileage: Gauge for distance or speed
-import { FaGasPump } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaUserFriends, FaGasPump } from "react-icons/fa";
+import { LuGauge } from "react-icons/lu";
 import { GiGearStickPattern } from "react-icons/gi";
 import type { FCar } from "../stores/useCarStore";
+import { motion } from "framer-motion";
+
 export const CarCard = ({ car }: { car: FCar }) => {
   return (
-    <div className="w-full relative group flex flex-col gap-2  rounded-xl py-4 transition-shadow shadow-xl drop-shadow-blue-600">
-      {car.available && (
-        <div className="absolute top-0  bg-blue-100 text-blue-600 font-bold px-4 text-xs rounded-full py-1 ml-8">
-          {car.available && "Available Now"}
+    <motion.div
+      whileHover={{ y: -5 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="group relative w-full bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300"
+    >
+      {/* Availability Badge */}
+      {car.available ? (
+        <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-green-500/10 backdrop-blur-md rounded-full border border-green-500/20">
+          <span className="text-xs font-bold text-green-700">Available</span>
+        </div>
+      ) : (
+        <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-red-500/10 backdrop-blur-md rounded-full border border-red-500/20">
+          <span className="text-xs font-bold text-red-700">Booked</span>
         </div>
       )}
-      <div className="flex justify-center items-center">
+
+      {/* Image Section */}
+      <div className="relative h-60 w-full bg-gray-50 flex items-center justify-center p-4 group-hover:bg-blue-50/30 transition-colors">
+        <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
         <Image
           src={car.image}
-          alt="car-image"
-          width={300}
-          height={200}
-          className="max-w-64 max-h-64 transition-transform duration-300 group-hover:scale-105 "
+          alt={`${car.make} ${car.model}`}
+          className="w-full h-full object-contain mix-blend-multiply drop-shadow-md group-hover:scale-110 transition-transform duration-500 ease-out"
+          removeWrapper
         />
       </div>
-      <div className="flex flex-col gap-4 px-8">
-        <div className="flex items-center justify-between border-b border-neutral-400 pb-4">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-bold">
-              {car.make} {car.model}
-            </h1>
-            <h2 className="text-md font-semibold text-neutral-500">
-              {car.type}
-            </h2>
-          </div>
-          <div className="flex flex-col gap-1">
-            <h1 className="text-blue-600 font-bold text-xl">
-              ${car.pricePerDay}{" "}
-            </h1>
 
-            <h2 className="text-neutral-500">Per Day</h2>
+      {/* Content Section */}
+      <div className="p-5 flex flex-col gap-4">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-gray-900 line-clamp-1">
+              {car.make} {car.model}
+            </h3>
+            <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+              {car.type}
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-2xl font-bold text-blue-600">${car.pricePerDay}</span>
+            <p className="text-xs text-gray-400">/ day</p>
           </div>
         </div>
-        <div className="flex gap-2 items-center justify-between flex-wrap">
-          <div className="flex items-center gap-2">
-            <FaUserFriends />
-            {car.seats}
+
+        {/* Specs Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 py-4 border-t border-gray-100">
+          <div className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-gray-50 text-gray-600">
+            <FaUserFriends size={16} className="text-blue-500" />
+            <span className="text-xs font-medium">{car.seats} Seats</span>
           </div>
-          <div className="flex items-center gap-2">
-            <GiGearStickPattern />
-            {car.transmission}
+          <div className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-gray-50 text-gray-600">
+            <GiGearStickPattern size={16} className="text-blue-500" />
+            <span className="text-xs font-medium truncate w-full text-center">{car.transmission}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <LuGauge />
-            {car.mileage}
+          <div className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-gray-50 text-gray-600">
+            <LuGauge size={16} className="text-blue-500" />
+            <span className="text-xs font-medium truncate w-full text-center">{car.mileage}km</span>
           </div>
-          <div className="flex items-center gap-2">
-            <FaGasPump />
-            {car.fuelType}
+          <div className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-gray-50 text-gray-600">
+            <FaGasPump size={16} className="text-blue-500" />
+            <span className="text-xs font-medium truncate w-full text-center">{car.fuelType}</span>
           </div>
         </div>
-        <Link to={`/all-cars/${car._id}`} className="w-full ">
-          <Button className="w-full bg-blue-600 text-white">
+
+        {/* Action Button */}
+        <Link to={`/all-cars/${car._id}`} className="block w-full">
+          <Button
+            className="w-full bg-gray-900 text-white font-medium hover:bg-blue-600 shadow-md hover:shadow-lg transition-all"
+            size="lg"
+            radius="lg"
+          >
             View Details
           </Button>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 };
