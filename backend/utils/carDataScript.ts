@@ -4,9 +4,8 @@ import { Car } from "../models/Car.js";
 
 const cars = [
   {
-    id: 1,
     make: "Honda",
-    model: "Civic",
+    carModel: "Civic",
     year: 2023,
     type: "Sedan",
     transmission: "Automatic",
@@ -29,9 +28,8 @@ const cars = [
       "A reliable and fuel-efficient sedan, perfect for city commutes and comfortable long drives.",
   },
   {
-    id: 2,
     make: "Toyota",
-    model: "RAV4",
+    carModel: "RAV4",
     year: 2024,
     type: "SUV",
     transmission: "Automatic",
@@ -54,9 +52,8 @@ const cars = [
       "Experience adventure and versatility with this capable SUV, ideal for family trips and diverse terrains.",
   },
   {
-    id: 3,
     make: "Ford",
-    model: "F-150",
+    carModel: "F-150",
     year: 2023,
     type: "Pickup Truck",
     transmission: "Automatic",
@@ -79,9 +76,8 @@ const cars = [
       "Built for tough jobs and weekend adventures, this powerful pickup truck offers exceptional utility and comfort.",
   },
   {
-    id: 4,
     make: "Nissan",
-    model: "Altima",
+    carModel: "Altima",
     year: 2022,
     type: "Sedan",
     transmission: "Automatic",
@@ -99,9 +95,8 @@ const cars = [
       "A practical and comfortable sedan, great for daily driving with a focus on safety features.",
   },
   {
-    id: 5,
     make: "Chevrolet",
-    model: "Tahoe",
+    carModel: "Tahoe",
     year: 2024,
     type: "SUV",
     transmission: "Automatic",
@@ -119,9 +114,8 @@ const cars = [
       "Command the road with this spacious and luxurious SUV, perfect for large families and extended journeys.",
   },
   {
-    id: 6,
     make: "Hyundai",
-    model: "Elantra",
+    carModel: "Elantra",
     year: 2023,
     type: "Sedan",
     transmission: "Automatic",
@@ -139,9 +133,8 @@ const cars = [
       "An economical and stylish sedan, offering a smooth ride and essential tech for your daily commute.",
   },
   {
-    id: 7,
     make: "BMW",
-    model: "3 Series",
+    carModel: "3 Series",
     year: 2023,
     type: "Luxury Sedan",
     transmission: "Automatic",
@@ -164,9 +157,8 @@ const cars = [
       "Indulge in a premium driving experience with this sophisticated luxury sedan, combining performance and elegance.",
   },
   {
-    id: 8,
     make: "Mercedes-Benz",
-    model: "C-Class",
+    carModel: "C-Class",
     year: 2024,
     type: "Luxury Sedan",
     transmission: "Automatic",
@@ -189,9 +181,8 @@ const cars = [
       "Experience unparalleled luxury and cutting-edge technology in this exquisite Mercedes-Benz C-Class.",
   },
   {
-    id: 9,
     make: "Jeep",
-    model: "Wrangler",
+    carModel: "Wrangler",
     year: 2023,
     type: "SUV",
     transmission: "Automatic",
@@ -209,9 +200,8 @@ const cars = [
       "Conquer any terrain with this iconic and rugged SUV, built for adventurous spirits and off-road thrills.",
   },
   {
-    id: 10,
     make: "Tesla",
-    model: "Model 3",
+    carModel: "Model 3",
     year: 2024,
     type: "Electric Sedan",
     transmission: "Automatic",
@@ -234,9 +224,8 @@ const cars = [
       "Drive the future with this innovative electric sedan, offering impressive range and advanced autonomous features.",
   },
   {
-    id: 11,
     make: "Volkswagen",
-    model: "Jetta",
+    carModel: "Jetta",
     year: 2022,
     type: "Sedan",
     transmission: "Automatic",
@@ -254,9 +243,8 @@ const cars = [
       "A no-frills, dependable sedan known for its comfortable ride and efficient performance.",
   },
   {
-    id: 12,
     make: "Subaru",
-    model: "Outback",
+    carModel: "Outback",
     year: 2023,
     type: "Wagon",
     transmission: "Automatic",
@@ -274,9 +262,8 @@ const cars = [
       "Explore with confidence in this versatile wagon, boasting all-wheel drive and advanced safety features for any journey.",
   },
   {
-    id: 13,
     make: "Kia",
-    model: "Seltos",
+    carModel: "Seltos",
     year: 2024,
     type: "Crossover",
     transmission: "Automatic",
@@ -294,9 +281,8 @@ const cars = [
       "A compact and stylish crossover, offering a comfortable ride and smart tech for urban exploration.",
   },
   {
-    id: 14,
     make: "Mazda",
-    model: "CX-5",
+    carModel: "CX-5",
     year: 2023,
     type: "SUV",
     transmission: "Automatic",
@@ -322,15 +308,19 @@ const cars = [
 const uploadCarToDatabase = async () => {
   try {
     await connectDB();
-    const uploadploadedCars = await Car.insertMany(cars);
-    if (uploadploadedCars.length > 0) {
-      console.log("✅Cars uploaded successfully");
-    } else {
-      console.log("❌Error ocurred while uploading car data");
-    }
+
+    // Clear existing cars first to avoid duplicates
+    await Car.deleteMany({});
+    console.log("🗑️  Cleared existing cars from database");
+
+    const uploadedCars = await Car.insertMany(cars);
+    console.log(`✅ ${uploadedCars.length} cars uploaded successfully`);
   } catch (error) {
-    console.error("❌Erroroccurred while uplaoding car data");
+    console.error("❌ Error occurred while uploading car data:", error);
+  } finally {
+    process.exit();
   }
 };
 
 uploadCarToDatabase();
+

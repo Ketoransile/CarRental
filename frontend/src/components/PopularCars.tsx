@@ -157,16 +157,41 @@ export const PopularCars = () => {
 
   if (error)
     return (
-      <div className="py-20 text-center">
-        <p className="text-red-500 font-medium">Error loading cars: {error}</p>
-        <button
-          onClick={fetchCars}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Retry
-        </button>
-      </div>
+      <section className="w-full py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50 min-h-[400px] flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-red-100 shadow-sm max-w-2xl mx-auto">
+          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-4">
+            <span className="text-red-500 text-3xl font-bold">!</span>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to load cars</h3>
+          <p className="text-gray-500 text-center mb-6">{error}</p>
+          <button
+            onClick={() => fetchCars()}
+            className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm"
+          >
+            Try Again
+          </button>
+        </div>
+      </section>
     );
+
+  if (cars.length === 0) {
+    return (
+      <section className="w-full py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50 min-h-[400px] flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-gray-100 shadow-sm max-w-2xl mx-auto">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <div className="text-gray-400 text-3xl">📭</div>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">No cars available</h3>
+          <p className="text-gray-500 text-center mb-6">We couldn't find any popular cars at the moment.</p>
+          <Link to="/all-cars">
+            <Button className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm">
+              View All Vehicles
+            </Button>
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">

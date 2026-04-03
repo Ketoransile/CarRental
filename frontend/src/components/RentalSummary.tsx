@@ -184,7 +184,7 @@ import { Button, Image, Input } from "@heroui/react";
 type ICar = {
   _id: string;
   make: string;
-  model: string;
+  carModel: string;
   year: number;
   type: string;
   transmission: "Automatic" | "Manual";
@@ -292,13 +292,13 @@ export const RentalSummary = ({
             src={car.image}
             width={250}
             height={250}
-            alt={`${car.make} ${car.model}`}
+            alt={`${car.make} ${car.carModel}`}
             className="rounded-lg object-contain max-w-full h-auto"
           />
         </div>
         <div className="flex flex-col gap-2 text-center md:text-left w-full md:w-1/2">
           <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">
-            {car.make} {car.model}
+            {car.make} {car.carModel}
           </h1>
           <p className="text-base text-neutral-600 mb-2">{car.description}</p>
           <div className="flex items-center justify-center md:justify-start gap-2 mt-2">
