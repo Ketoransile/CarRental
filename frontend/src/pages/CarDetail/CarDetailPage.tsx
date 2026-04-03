@@ -10,7 +10,7 @@ import {
   FaTachometerAlt,
 } from "react-icons/fa";
 import { GiCarDoor, GiGearStickPattern } from "react-icons/gi";
-import { FiArrowLeft, FiShare2 } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
 
@@ -114,7 +114,7 @@ export const CarDetailPage = () => {
             </div>
             <Image
               src={car.image}
-              alt={`${car.make} ${car.model}`}
+              alt={`${car.make} ${car.carModel}`}
               className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
               classNames={{ wrapper: "w-full aspect-[4/3] md:aspect-[16/9]" }}
             />
@@ -140,7 +140,7 @@ export const CarDetailPage = () => {
           <motion.div variants={itemVariants} className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Vehicle Overview</h3>
             <p className="text-gray-600 leading-relaxed text-lg">
-              {car.description || `Experience the thrill of driving the ${car.year} ${car.make} ${car.model}. This vehicle combines performance, comfort, and style to deliver an unforgettable journey. Perfect for business trips or weekend getaways.`}
+              {car.description || `Experience the thrill of driving the ${car.year} ${car.make} ${car.carModel}. This vehicle combines performance, comfort, and style to deliver an unforgettable journey. Perfect for business trips or weekend getaways.`}
             </p>
           </motion.div>
         </motion.div>
@@ -154,7 +154,7 @@ export const CarDetailPage = () => {
 
             <div className="relative z-10">
               <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
-                {car.make} <span className="text-blue-600">{car.model}</span>
+                {car.make} <span className="text-blue-600">{car.carModel}</span>
               </h1>
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-6">
                 <span>{car.year}</span>

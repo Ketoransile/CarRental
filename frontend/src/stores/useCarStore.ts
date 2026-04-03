@@ -8,7 +8,7 @@ import axios from "axios";
 export type FCar = {
   _id: string;
   make: string;
-  model: string;
+  carModel: string;
   year: number;
   type: string;
   transmission: "Automatic" | "Manual";

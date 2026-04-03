@@ -4,9 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec tsx server.ts",
-    "build": "tsc",
-    "start": "node server.ts",
+    "dev": "node init && nodemon --exec tsx server.ts",
+    "build": "node init && tsc",
+    "start": "node init && node server.ts",
     "vercel-build": "npm run build"
   },
   "keywords": [],

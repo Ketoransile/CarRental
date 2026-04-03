@@ -30,7 +30,7 @@ export const CarCard = ({ car }: { car: FCar }) => {
         <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
         <Image
           src={car.image}
-          alt={`${car.make} ${car.model}`}
+          alt={`${car.make} ${car.carModel}`}
           className="w-full h-full object-contain mix-blend-multiply drop-shadow-md group-hover:scale-110 transition-transform duration-500 ease-out"
           removeWrapper
         />
@@ -41,7 +41,7 @@ export const CarCard = ({ car }: { car: FCar }) => {
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <h3 className="text-xl font-bold text-gray-900 line-clamp-1">
-              {car.make} {car.model}
+              {car.make} {car.carModel}
             </h3>
             <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
               {car.type}
